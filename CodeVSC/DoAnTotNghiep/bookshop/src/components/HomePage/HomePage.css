@@ -1,0 +1,100 @@
+.homepage-container {
+    display: grid;
+    grid-template-columns: 250px auto;
+}
+
+.category-container {
+    margin: 10px;
+    background-color: white;
+    width: 200px;
+    border-radius: 15px;
+    padding: 8px;
+    height: fit-content;
+}
+
+.category-title {
+    font-size: 24px;
+    font-weight: 500;
+}
+
+.category-item {
+    cursor: pointer;
+    height: 40px;
+    display: flex;
+    align-items: center; /* Căn giữa theo chiều dọc */
+    padding-left: 5px;
+    border-radius: 5px;
+}
+
+.category-item:hover {
+    background-color: #B2AFA4 ;
+}
+
+.booklist-container {
+    margin: 10px;
+}
+
+.sort-navbar {
+    padding: 20px;
+    display: flex;
+    background-color: white;
+    gap: 20px;
+}
+
+.sort-box {
+    cursor: pointer;
+    padding: 6px;
+    position: relative;
+}
+
+.sort-box:hover {
+    color: #5ACEBB;
+}
+
+.sort-box:hover::after {
+    content: "";
+    position: absolute; 
+    bottom: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 1px; 
+    background-color: #5ACEBB; 
+}
+
+.selected-option::after {
+    content: "";
+    position: absolute; 
+    bottom: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 1px; 
+    background-color: #5ACEBB; 
+}
+
+.selected-option{
+    color: #5ACEBB;
+}
+
+.input-sort-box {
+    display: flex;
+}
+
+.booklist-container {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.book-list {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-gap: 10px;
+    margin-bottom: 20px; 
+}
+
+.book {
+    width: 190px;
+}
+
+.book-pagination {
+    float: right;
+}

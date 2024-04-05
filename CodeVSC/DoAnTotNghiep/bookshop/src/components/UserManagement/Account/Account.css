@@ -1,0 +1,38 @@
+.account-main {
+    display: flex;
+}
+
+.account-main-left{
+    margin-left: 50px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 500px;
+    padding: 15px;
+}
+
+.account-label {
+    min-width: 100px;
+}
+
+.account-main-left > * {
+    display: flex;
+    gap: 15px;
+}
+
+.account-main-right {
+    flex-grow: 1;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.account-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 100%;
+  
+}

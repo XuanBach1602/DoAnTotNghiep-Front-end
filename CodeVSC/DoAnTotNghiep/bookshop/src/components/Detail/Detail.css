@@ -1,0 +1,112 @@
+.detail-container{
+    margin: 25px 50px;
+}
+.detail-book {
+    display: flex;
+    gap: 20px;
+    background-color: white;
+    padding: 20px;
+}
+
+.book-avatar {
+    width: 350px;
+    height: 400px;
+}
+
+.book-title-detail {
+    font-size: 32px;
+    margin:15px 0;
+}
+
+.author-name {
+    color: rgb(7, 95, 122);
+}
+
+.divider {
+    border-left: 1px solid #b6acac; /* Set the style, width, and color of the divider */
+    height: 20px; /* Set the height of the divider to match the height of the container */
+    margin: 0 10px; /* Adjust margin as needed */
+}
+
+.button-row{
+    display: flex;
+    justify-content: left;
+    margin-top: 15px;
+}
+
+.button-row >* {
+    height: 40px;
+    margin-left: 15px;
+}
+
+.detail-price {
+    display: flex;
+    background-color: #d6dac8;
+    height: 75px;
+    margin: 15px 15px 15px 0;
+    align-items: center;
+    font-size: 32px;
+    padding-left: 100px;
+}
+
+.book-count {
+    display: flex;
+    align-items: center;
+    height: 60px;
+}
+
+.book-description {
+    margin-top: 20px;
+    background-color: white;
+    font-size: 20px;
+    padding: 20px;
+}
+
+.books-in-this-category {
+    margin: 25px 0;
+    background-color: white;
+    padding: 20px;
+}
+
+.reference-book{
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.partion-title{
+    font-size: 28px;
+    font-weight: 500;
+}
+
+.Comments {
+    background-color: white;
+    padding: 20px;
+    margin-bottom: 25px;
+}
+
+
+.comment-specification {
+    display: flex;
+    gap:20px;
+    background-color: rgb(255, 250, 249);
+    padding: 20px;
+}
+
+.selection-star-row > *{
+    margin-left: 10px;
+}
+
+.comment-specification-left {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    justify-content: center;
+    align-items: center;
+}
+
+.selected-rate {
+    border-color: rgb(250, 133, 0);
+    color:rgb(250, 133, 0);
+}
+

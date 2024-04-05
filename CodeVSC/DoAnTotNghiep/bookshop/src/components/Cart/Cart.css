@@ -1,0 +1,89 @@
+.cart-page{
+    margin: 20px ;
+}
+
+.cart-container {
+    display: grid;
+   grid-template-columns: 4fr 1fr;
+}
+
+#cart-title {
+  font-size: 28px;
+  font-weight: 500;  
+}
+
+.cart-info {
+    background-color: white;
+    display: grid;
+    grid-template-columns: 2.5fr 1fr 1fr 1fr 0.5fr;
+    padding: 10px;
+}
+
+.cartitem{
+    display: grid;
+    grid-template-columns: 2.5fr 1fr 1fr 1fr 0.5fr;
+    margin-top: 15px;
+    background-color: white;
+    padding: 8px;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+
+.cartitem-info {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+
+}
+
+.cart-item-img {
+    height: 80px;
+    width: 80px;
+    margin-right: 5px;
+}
+
+.cart-item-title {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.delete-icon:hover {
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.cart-right {
+    background-color: white;
+    margin-left: 20px;
+    height: fit-content;
+    padding: 15px;
+}
+
+.total-price-title{
+    font-size: 20px;
+    font-weight: 400;
+}
+
+.centered-modal {
+    position: absolute;
+    top: 30%;
+    left: 30%;
+}
+
+.centered-modal .ant-modal-footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.centered-modal .ant-modal-title{
+    text-align: center;
+}
+
+
+
+  

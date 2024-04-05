@@ -1,0 +1,20 @@
+.comment-container {
+    margin:10px;
+    display: flex;
+    gap: 10px;
+}
+
+.comment-container:hover {
+    cursor: pointer;
+    background-color: #BFCAC8;
+}
+.commented-user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 100%;
+    margin-top: 5px;
+}
+
+.comment-content {
+    margin-top: 15px;
+}
