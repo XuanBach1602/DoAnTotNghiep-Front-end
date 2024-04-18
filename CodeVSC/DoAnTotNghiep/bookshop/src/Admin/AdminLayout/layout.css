@@ -1,0 +1,15 @@
+.admin-layout-container{
+    display: grid;
+    grid-template-columns: min-content auto;
+    height: 100%;
+}
+
+.side-bar-admin {
+    background-color: #191919;
+    /* display: block; */
+    height: 100%;
+}
+
+.side-bar-admin .ant-menu.ant-menu-sub.ant-menu-inline{
+    background-color:  #191919 !important;
+}

@@ -2,7 +2,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 // Host của bạn
-const host = 'https://localhost:7239';
+const host = 'https://localhost:44324';
 
 const getToken = () => {
   const token = Cookies.get("token");
@@ -35,7 +35,6 @@ export const getAsync = async (url, data = {}, config = {}) => {
 export const postAsync = async (url, data, config = {}) => {
   try {
     const token = getToken();
-    console.log(token);
     if (token) {
       config.headers = {
         ...config.headers,

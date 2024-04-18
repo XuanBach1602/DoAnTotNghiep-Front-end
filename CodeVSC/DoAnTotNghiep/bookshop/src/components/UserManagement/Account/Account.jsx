@@ -3,9 +3,11 @@ import { Button, Form, Input, Select, Space, DatePicker } from "antd";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import dayjs from "dayjs";
 import { useUser } from "../../../UserContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { putAsync } from "../../../Apis/axios";
+import { toast } from "react-toastify";
 const Account = () => {
-  const { user } = useUser();
+  const { user, fetchUserData } = useUser();
   const [userInfo, setUserInfo] = useState({ ...user });
   const [selectedFile, setSelectedFile] = useState(null);
   const [error, setError] = useState();
@@ -53,7 +55,7 @@ const Account = () => {
       dateOfBirth: dateOfBirth,
     }));
   };
-  const save = () => {
+  const save = async () => {
     let hasError = false;
     const errorMessages = [];
 
@@ -67,12 +69,24 @@ const Account = () => {
         }
       }
     }
-
-    // Nếu có lỗi, hiển thị thông báo lỗi
     if (hasError) {
       setError("Please fill full in form");
-      console.log(userInfo);
     } else {
+      const formData = new FormData();
+      formData.append("Id", userInfo.id);
+      formData.append("Name", userInfo.name);
+      formData.append("Email", userInfo.email);
+      formData.append("PhoneNumber", userInfo.phoneNumber);
+      formData.append("Address", userInfo.address);
+      formData.append("DateOfBirth", userInfo.dateOfBirth);
+      formData.append("Avatar",selectedFile)
+      try {
+        var res = await putAsync("/api/User/Update",formData);
+        fetchUserData();
+        toast.success("Update information successfully", {
+          autoClose: 1000,
+        });
+      } catch (error) {}
       setError("")
       console.log(userInfo);
     }
@@ -81,6 +95,10 @@ const Account = () => {
   dayjs.extend(customParseFormat);
   const dateFormat = "YYYY-MM-DD";
   const { TextArea } = Input;
+
+  useEffect(() => {
+    setUserInfo({...user});
+  },[user])
   return (
     <div style={{ margin: "20px" }}>
       <div className="account-navbar">
@@ -141,7 +159,7 @@ const Account = () => {
               value={
                 userInfo?.dateOfBirth
                   ? dayjs(userInfo.dateOfBirth, dateFormat)
-                  : dayjs("2024-04-04", dateFormat)
+                  : null
               }
               onChange={(date, dateString) => setDateOfBirth(dateString)}
               format={dateFormat}

@@ -20,6 +20,7 @@ const MainLayout = () => {
   const navigate = useNavigate();
   const onSearch = (e) => {
     setSearchText(e);
+    navigate("/");
     console.log(searchText);
   };
 
@@ -53,8 +54,8 @@ const MainLayout = () => {
           <div className="homepage" onClick={() => navigate("/")}>
             <HomeTwoTone style={{ fontSize: "30px" }} /> <span>Home Page</span>
           </div>
-          <div className="homepage">
-            <SmileTwoTone style={{ fontSize: "30px" }} /> <span>Account</span>
+          <div className="homepage" onClick={() => navigate("/User")}>
+            <SmileTwoTone style={{ fontSize: "30px" }}/> <span>Account</span>
           </div>
           <div
             className="homepage"

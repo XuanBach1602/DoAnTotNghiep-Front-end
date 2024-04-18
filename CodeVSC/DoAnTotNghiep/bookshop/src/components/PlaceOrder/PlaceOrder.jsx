@@ -3,8 +3,12 @@ import { HomeTwoTone } from "@ant-design/icons";
 import { useUser } from "../../UserContext";
 import React, { useEffect, useState } from "react";
 import { Modal, Button, Input } from "antd";
+import { useOutletContext } from "react-router-dom";
 import { getAsync, postAsync, putAsync, deleteAsync } from "../../Apis/axios";
+import { Navigate, useNavigate } from "react-router-dom";
 const PlaceOrder = () => {
+  const navigate = useNavigate();
+  const [searchText,fetchCartData] = useOutletContext();
   const { user } = useUser();
   const [modalDetailVisible, setModalDetailVisible] = useState(false);
   const [modalUpdateVisible, setModalUpdateVisible] = useState(false);
@@ -12,6 +16,8 @@ const PlaceOrder = () => {
   const [tempUser, setTempUser] = useState();
   const [orderItemList, setOrderItemList] = useState([]);
   const [total, setTotal] = useState(0);
+  const [orderId, setOrderId] = useState();
+  const [status, setStatus] = useState(0);
 
   const fetchOrderData = async () => {
     try {
@@ -22,9 +28,27 @@ const PlaceOrder = () => {
       for (let i = 0; i < orderDetails.length; i++) {
         count += orderDetails[i].price * orderDetails[i].count;
       }
+      setOrderId(res.id);
       setTotal(count);
     } catch (error) {}
   };
+
+  const order = async () => {
+    try {
+      var data = {
+        OrderId : orderId,
+        Status: status,
+        phoneNumber : displayUser.phoneNumber,
+        Address: displayUser.address,
+        Name: displayUser.name
+      }
+      var res = await postAsync("/api/Order/PlaceOrder",data);
+      fetchCartData();
+      setTimeout(() => {
+        navigate("/");
+      }, 1000);
+    } catch (error) {}
+  }
 
   const handleNameChange = (e) => {
     setTempUser({
@@ -115,6 +139,7 @@ const PlaceOrder = () => {
         <div className="product-list">
           <div className="cart-left">
             <div className="cart-info">
+              <div></div>
               <div>Price</div>
               <div>Quantity</div>
               <div>Into money</div>
@@ -144,7 +169,7 @@ const PlaceOrder = () => {
             Total: <span style={{ color: "orange" }}>${total}</span>
           </div>
           <div>
-            <Button style={{width:"100px",height:"40px"}} type="primary" danger>
+            <Button onClick={() => order()} style={{width:"100px",height:"40px"}} type="primary" danger>
               Order
             </Button>
           </div>

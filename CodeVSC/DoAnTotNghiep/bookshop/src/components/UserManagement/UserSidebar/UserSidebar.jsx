@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppstoreOutlined, MailOutlined } from '@ant-design/icons';
+import { getAsync, postAsync } from '../../../Apis/axios';
 import { Menu } from 'antd';
+import { useUser } from '../../../UserContext';
+import { toast } from "react-toastify";
+import Cookies from 'js-cookie';
 
 const UserSidebar = () => {
 
@@ -16,12 +20,28 @@ function getItem(label, key, icon, children, type, onClick) {
   };
 }
 
+const {setUser,setIsAuthenticated} = useUser();
+const SignOut = async () => {
+  try {
+    var res = await postAsync(`/api/Auth/SignOut`);
+    Cookies.remove('token');
+    navigate("/")
+    toast.success("Sign out successfully", {
+        autoClose: 1000,
+      });
+      setUser(null);
+      setIsAuthenticated(false);
+  } catch (error) {
+  }
+}
+
 const items = [
   getItem('My account', '1', <MailOutlined />, [
     getItem('Account information', '11', undefined, undefined, undefined, () => navigate("/User/Account")),
     getItem('Change password', '12', undefined, undefined, undefined, () => navigate("/User/ChangePassword")),
   ]),
   getItem('Orders', '2', <AppstoreOutlined />, undefined, undefined, () => navigate("/User/Orders")),
+  getItem('Sign Out', '3', <AppstoreOutlined />, undefined, undefined, () => SignOut())
 ];
 
 const getLevelKeys = (items1) => {
