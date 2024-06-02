@@ -30,6 +30,26 @@
     background-color: #B2AFA4 ;
 }
 
+.selected-category {
+  background-color: #B2AFA4 ;
+}
+
+.blinking-icon {
+    animation: blink-animation 1.5s infinite;
+  }
+  
+  @keyframes blink-animation {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
 .booklist-container {
     margin: 10px;
 }
@@ -98,3 +118,58 @@
 .book-pagination {
     float: right;
 }
+
+.hot-product-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  
+  .hot-product-list {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-gap: 10px;
+    margin-bottom: 20px; 
+    transition: transform 0.5s ease-in-out;
+  }
+  
+  .book {
+    width: 200px; /* Adjust to fit your design */
+    margin: 0 10px;
+  }
+  
+  
+  .nav-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ddd;
+    border: none;
+    padding: 10px;
+    height: 15px;
+    width: 15px;
+    border-radius: 100%;
+    cursor: pointer;
+    background-color: transparent;
+    transition: background-color 0.3s ease;
+    position: absolute; /* Thiết lập vị trí tuyệt đối */
+  }
+
+  .nav-button:hover {
+    background-color: #ddd;
+  }
+  
+  .prev-button {
+    left: 0; /* Đặt nút "Prev" ở bên trái */
+  }
+  
+  .next-button {
+    right: 0; /* Đặt nút "Next" ở bên phải */
+  }
+
+  .disabled {
+    opacity: 0.5; /* Làm mờ nút khi disabled */
+   cursor: auto;
+    /* Thay đổi hình dạng con trỏ khi disabled */
+  }

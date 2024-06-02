@@ -5,8 +5,11 @@ import { Input, Space, Button, Modal } from "antd";
 import { Navigate, useNavigate } from "react-router-dom";
 import { Rate } from "antd";
 import { toast } from "react-toastify";
+import { loadStripe } from '@stripe/stripe-js';
 const { Search } = Input;
 const Order = () => {
+  const stripePublicKey = process.env.REACT_APP_STRIPE_PUBLIC_KEY;
+  const stripePromise = loadStripe(stripePublicKey);
   const [orderItemList, setOrderItemList] = useState([]);
   const [searchText, setSearchText] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
@@ -31,6 +34,7 @@ const setRate = (rate) => {
   const tabs = [
     { value: "0", name: "All" },
     { value: "1", name: "Wait for pay" },
+    { value: "5", name: "Wait for processing" },
     { value: "2", name: "Delivering" },
     { value: "3", name: "Complete" },
     { value: "4", name: "Refund" },
@@ -59,6 +63,22 @@ const setRate = (rate) => {
 
   const onRateChanged = (e) => {
     setRate(e);
+  }
+
+  const PlaceOrder = async (orderId) => {
+    try {
+      var res = await getAsync(`/api/Order/CreatePayment?orderId=${orderId}`);    
+      const sessionId = res.sessionId;
+      console.log(sessionId)
+      const stripe = await stripePromise;
+      const { error } = await stripe.redirectToCheckout({ sessionId });
+
+      if (error) {
+          console.error('Error redirecting to checkout:', error);
+      }
+    } catch (error) {
+      
+    }
   }
 
   const saveComment = async () => {
@@ -108,6 +128,20 @@ const setRate = (rate) => {
   const Repurchase = (id) => {
     navigate(`/Book/${id}`);
   };
+
+  const Cancel = async (orderId) => {
+    try {
+      var res = await postAsync(`/api/Order/Cancel?orderId=${orderId}`)
+      toast.success("Cancel order successfully", {
+        autoClose: 1000,
+      });
+      fetchOrderData();
+    } catch (error) {
+      toast.error("Cancel order fail, try again", {
+        autoClose: 1000,
+      });
+    }
+  }
 
   useEffect(() => {
     fetchOrderData();
@@ -182,7 +216,7 @@ const setRate = (rate) => {
                       )}
                     {orderItem.orderStatus === 2 &&
                       orderItem.shipStatus === 0 && (
-                        <Button type="primary" danger>
+                        <Button type="primary" danger onClick={() => Cancel(orderItem.orderId)}>
                           Cancel Order
                         </Button>
                       )}
@@ -192,7 +226,7 @@ const setRate = (rate) => {
                           Delivering
                         </Button>
                       )}
-                    {orderItem.orderStatus === 3 && (
+                    {orderItem.orderStatus === -1 && (
                       <Button type="primary" disabled danger>
                         Canceled
                       </Button>
@@ -201,6 +235,12 @@ const setRate = (rate) => {
                       orderItem.shipStatus === 2 && (
                         <Button type="primary" danger onClick={() => showComment(orderItem)}>
                           Rate
+                        </Button>
+                      )}
+                      {orderItem.orderStatus === 1 
+                      && (
+                        <Button type="primary" danger onClick={() => PlaceOrder(orderItem.orderId)}>
+                          Place Order
                         </Button>
                       )}
                   </div>

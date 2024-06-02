@@ -48,6 +48,11 @@ html, body {
     color: coral;
 }
 
+.order-item-img {
+    min-width: 100px !important;
+    height: 100px ;
+}
+
 .total-money{
     float: right;
     margin-top: 15px;
@@ -67,3 +72,10 @@ html, body {
 .total-container > * {
     margin-top: 15px;
 }
+
+.tempTotal-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+

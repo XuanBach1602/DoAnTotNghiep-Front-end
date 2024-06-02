@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Cart.css";
-import { Checkbox, Button, Input, Modal } from "antd";
-import { PlusOutlined, MinusOutlined, DeleteTwoTone } from "@ant-design/icons";
+import { Checkbox, Button, Input, Modal, Space, Popconfirm } from "antd";
+import { PlusOutlined, MinusOutlined, DeleteOutlined } from "@ant-design/icons";
 import { getAsync, postAsync, putAsync, deleteAsync } from "../../Apis/axios";
 import { toast } from "react-toastify";
 
@@ -11,7 +11,7 @@ const Cart = () => {
   const [totalPrice, setTotalPrice] = useState(0);
   const [currentId, setCurrentId] = useState(0);
   const [isCheckAll, setIsCheckAll] = useState(false);
-  const [selectedCount,setSelectedCount] = useState(0);
+  const [selectedCount, setSelectedCount] = useState(0);
 
   const navigate = useNavigate();
 
@@ -19,28 +19,31 @@ const Cart = () => {
     try {
       var res = await getAsync("/api/CartItem/GetAllByUserId");
       setCartItemList(res);
-      var result = res.some(x => x.isChecked === false);
-      if(result) setIsCheckAll(false);
+      var result = res.some((x) => x.isChecked === false);
+      if (result) setIsCheckAll(false);
       else setIsCheckAll(true);
     } catch (error) {}
   };
 
-  const handleIncreaseCount = async (index,id) => {
+  const handleIncreaseCount = async (index, id) => {
     var count = cartItemList[index].count + 1;
     try {
-        var res = await putAsync(`/api/CartItem/UpdateQuantity?id=${id}&count=${count}`);
-        fetchCartItemData();
-      } catch (error) {}
+      var res = await putAsync(
+        `/api/CartItem/UpdateQuantity?id=${id}&count=${count}`
+      );
+      fetchCartItemData();
+    } catch (error) {}
   };
 
-  const handleDecreaseCount = async (index,id) => {
+  const handleDecreaseCount = async (index, id) => {
     if (cartItemList[index].count-- > 0) {
       try {
-        var res = await putAsync(`/api/CartItem/UpdateQuantity?id=${id}&count=${cartItemList[index].count}`);
+        var res = await putAsync(
+          `/api/CartItem/UpdateQuantity?id=${id}&count=${cartItemList[index].count}`
+        );
         fetchCartItemData();
-      }
-      catch (error) {}
-    }    
+      } catch (error) {}
+    }
   };
 
   const calculateTotalPrice = () => {
@@ -49,71 +52,69 @@ const Cart = () => {
     cartItemList.forEach((item) => {
       if (item.isChecked) {
         totalPrice += item.count * item.price;
-        selectedCount ++;
+        selectedCount++;
       }
       setSelectedCount(selectedCount);
     });
-    setTotalPrice(totalPrice);
+    setTotalPrice(totalPrice.toFixed(2));
   };
-  
 
   const showConfirmation = (id) => {
     setModalVisible(true);
     setCurrentId(id);
-  }
+  };
 
   const deleteCartItem = async (id) => {
     try {
-      const res = await deleteAsync("/api/CartItem/Delete?id="+ id);
+      const res = await deleteAsync("/api/CartItem/Delete?id=" + id);
       fetchCartItemData();
-    } catch (error) {  
-    }
-  }
+    } catch (error) {}
+  };
 
-  const createOrder = async() => {
-    if(selectedCount === 0){
+  const createOrder = async () => {
+    if (selectedCount === 0) {
       toast.info("Please select at least one product", {
         autoClose: 1000,
       });
-    }
-    else{
-      var data = cartItemList.filter(x => x.isChecked === true).map(x => ({
-        BookId:x.bookId,
-        Count:x.count,
-        price:x.price,
-        CartItemId: x.id
-      }));
+    } else {
+      var data = cartItemList
+        .filter((x) => x.isChecked === true)
+        .map((x) => ({
+          BookId: x.bookId,
+          Count: x.count,
+          Price: x.price,
+          CartItemId: x.id,
+        }));
       try {
-        const res = await postAsync("/api/Order/Add",data);
-        navigate("/PlaceOrder")
-      } catch (error) {  
-      }
+        const res = await postAsync("/api/Order/Add", data);
+        navigate("/PlaceOrder");
+      } catch (error) {}
     }
-  }
+  };
 
-  const updateCheck = async(id,check) => {
+  const updateCheck = async (id, check) => {
     try {
-      const res = await putAsync("/api/CartItem/UpdateCheck?id="+ id + "&check=" + check);
+      const res = await putAsync(
+        "/api/CartItem/UpdateCheck?id=" + id + "&check=" + check
+      );
       fetchCartItemData();
-      var result = res.some(x => x.isChecked === false);
-      if(result) setIsCheckAll(false);
+      var result = res.some((x) => x.isChecked === false);
+      if (result) setIsCheckAll(false);
       else setIsCheckAll(true);
-    } catch (error) {  
-    }
-  }
+    } catch (error) {}
+  };
 
-  const checkAll = async() => {
+  const checkAll = async () => {
     try {
       const res = await putAsync("/api/CartItem/CheckAll?check=" + !isCheckAll);
       fetchCartItemData();
       setIsCheckAll(!isCheckAll);
-    } catch (error) {  
-    }
-  }
+    } catch (error) {}
+  };
 
   useEffect(() => {
     calculateTotalPrice();
-  },[cartItemList])
+  }, [cartItemList]);
 
   useEffect(() => {
     fetchCartItemData();
@@ -126,14 +127,27 @@ const Cart = () => {
   const handleYes = () => {
     setConfirmLoading(true);
     deleteCartItem(currentId);
-    setModalVisible(false)
+    setModalVisible(false);
     setTimeout(() => {
       setConfirmLoading(false);
-    }, 2000); 
+    }, 2000);
+  };
+
+  const handleChangeCount = async (e, index, id) => {
+    const value = parseInt(e.target.value, 10);
+    if (!isNaN(value) && value >= 1) {
+      var count = cartItemList[index].count + 1;
+      try {
+        var res = await putAsync(
+          `/api/CartItem/UpdateQuantity?id=${id}&count=${count}`
+        );
+        fetchCartItemData();
+      } catch (error) {}
+    }
   };
 
   const handleNo = () => {
-    setModalVisible(false); 
+    setModalVisible(false);
   };
   return (
     <div className="cart-page">
@@ -141,10 +155,7 @@ const Cart = () => {
       <div className="cart-container">
         <div className="cart-left">
           <div className="cart-info">
-          <Checkbox
-              checked={isCheckAll}
-              onChange={() => checkAll()}
-            >
+            <Checkbox checked={isCheckAll} onChange={() => checkAll()}>
               All
             </Checkbox>
             <div>Price</div>
@@ -155,9 +166,11 @@ const Cart = () => {
             cartItemList.map((cartItem, index) => (
               <div className="cartitem" key={cartItem.id}>
                 <div className="cartitem-info">
-                <Checkbox
+                  <Checkbox
                     checked={cartItem.isChecked}
-                    onChange={() => updateCheck(cartItem.id,!cartItem.isChecked)}
+                    onChange={() =>
+                      updateCheck(cartItem.id, !cartItem.isChecked)
+                    }
                   />
                   <img
                     src={cartItem.avatarUrl}
@@ -168,38 +181,52 @@ const Cart = () => {
                 </div>
                 <div className="cartitem-price">${cartItem.price}</div>
                 <div className="book-count">
-                  <Button onClick={() => handleIncreaseCount(index,cartItem.id)}>
+                  <Button
+                    onClick={() => handleIncreaseCount(index, cartItem.id)}
+                  >
                     <PlusOutlined />
                   </Button>
                   <Input
                     type="number"
                     min={0}
                     style={{ width: "60px", textAlign: "center" }}
+                    onChange={(e) => handleChangeCount(e, index, cartItem.id)}
                     value={cartItem.count}
                   />
-                  <Button onClick={() => handleDecreaseCount(index,cartItem.id)}>
+                  <Button
+                    onClick={() => handleDecreaseCount(index, cartItem.id)}
+                  >
                     <MinusOutlined />
                   </Button>
                 </div>
                 <div className="cart-item-total">
-                  ${cartItem.count * cartItem.price}
+                  ${(cartItem.count * cartItem.price).toFixed(2)}
                 </div>
-                <DeleteTwoTone
-                  onClick={() => showConfirmation(cartItem.id)}
-                  twoToneColor={"red"}
-                  style={{ color: "#ff0000" }}
-                  className="delete-icon"
-                />
+                <div>
+                  <Space>
+                    <Popconfirm
+                      title="Bạn có chắc chắn muốn xóa?"
+                      okText="Yes"
+                      cancelText="No"
+                      onConfirm={() => deleteCartItem(cartItem.id)}
+                    >
+                      <Button type="danger" icon={<DeleteOutlined />} />
+                    </Popconfirm>
+                  </Space>
+                </div>
               </div>
             ))}
         </div>
         <div className="cart-right">
-            <div className="total-price-title">
-                Total Price: ${totalPrice}
-            </div>
-            <Button style={{marginLeft:"20px",marginTop:"20px",width:"150px"}} type="primary" danger onClick={() => createOrder()}>
-               Buy({selectedCount})
-               </Button>
+          <div className="total-price-title">Total Price: ${totalPrice}</div>
+          <Button
+            style={{ marginLeft: "20px", marginTop: "20px", width: "150px" }}
+            type="primary"
+            danger
+            onClick={() => createOrder()}
+          >
+            Buy({selectedCount})
+          </Button>
         </div>
       </div>
     </div>

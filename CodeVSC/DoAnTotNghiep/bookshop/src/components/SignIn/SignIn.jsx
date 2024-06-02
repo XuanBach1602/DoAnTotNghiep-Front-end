@@ -14,6 +14,7 @@ const SignIn = () => {
   const {user,setUser, setIsAuthenticated} = useUser();
   const navigate = useNavigate();
   const Post = async () => {
+    const redirectPath = localStorage.getItem("redirectPath");
     var isValid = (email !== "") && (password !== "");
     if (!isValid) {
       setValidation("Please fill in form");
@@ -33,9 +34,17 @@ const SignIn = () => {
         toast.success("Sign in successfully!", {
           autoClose: 1000,
         });
-        setTimeout(() => {
-          navigate("/");
-        }, 1000);
+        if(redirectPath && redirectPath.toLowerCase() !== "/signup"){
+          setTimeout(() => {
+            navigate(redirectPath);
+          }, 1000);
+          localStorage.removeItem("redirectPath");
+        }
+        else{
+          setTimeout(() => {
+            navigate("/");
+          }, 1000);
+        }
       } catch (error) {
         setValidation(error.response.data.errMsg);
       }
@@ -92,6 +101,9 @@ const SignIn = () => {
               Sign Up
             </a>
           </p>
+          <a href="/resetpassword" style={{ textDecoration: "none" }}>
+              Forgot Password
+            </a>
         </div>
         <div className="description">
           <h2 style={{ color: "white" }}>Glad to see you</h2>

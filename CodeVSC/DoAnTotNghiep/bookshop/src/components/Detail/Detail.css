@@ -69,9 +69,10 @@
 }
 
 .reference-book{
-    display: flex;
-    gap: 10px;
-    margin-top: 10px;
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        grid-gap: 10px;
+        margin-bottom: 20px; 
 }
 
 .partion-title{

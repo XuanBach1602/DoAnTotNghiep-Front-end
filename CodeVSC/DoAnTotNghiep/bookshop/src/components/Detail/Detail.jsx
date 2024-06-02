@@ -1,11 +1,12 @@
-import { useOutlet, useOutletContext, useParams } from "react-router-dom";
+import { useOutlet, useOutletContext, useParams, useNavigate, useLocation } from "react-router-dom";
 import "./Detail.css";
 import { useEffect, useState } from "react";
-import { getAsync, postAsync } from "../../Apis/axios";
+import { getAsync ,postAsync} from "../../Apis/axios";
 import { Rate, Button, Input, Pagination } from "antd";
 import Comment from "../Comment/Comment";
 import Book from "../Book/Book";
 import { useUser } from "../../UserContext";
+import { toast } from "react-toastify";
 import {
   ShoppingCartOutlined,
   PlusOutlined,
@@ -13,6 +14,7 @@ import {
 } from "@ant-design/icons";
 
 const Detail = () => {
+  const navigate = useNavigate();
   const { id } = useParams();
   const [count, setCount] = useState(1);
   const [bookList, setBookList] = useState([]);
@@ -21,8 +23,9 @@ const Detail = () => {
   const [pageSize, setPageSize] = useState(10);
   const [commentList, setCommentList] = useState([]);
   const [commentTotal, setCommentTotal] = useState(0);
-  const {user} = useUser(); 
+  const {user, isAuthenticated} = useUser(); 
   const [searchText,fetchCartData] = useOutletContext();
+  const location = useLocation();
   const [book, setBook] = useState({
     id: 0,
     title: "",
@@ -91,6 +94,12 @@ const Detail = () => {
   }
 
   const addToCart = async() => {
+    
+    if(!isAuthenticated){
+      localStorage.setItem("redirectPath", location.pathname);
+      navigate("/signin");
+      return;
+    }
     try {
       var data = {
           BookId : id,
@@ -100,6 +109,9 @@ const Detail = () => {
       var res = await postAsync (
         `/api/CartItem/Add`,data
       );
+      toast.success("Add book to cart successfully", {
+        autoClose: 1000,
+      });
       fetchCartData();
     } catch (error) {}
   }
@@ -115,6 +127,12 @@ const Detail = () => {
   useEffect(() => {
     fetchBooksInThisCategory();
   }, [book.categoryId,id]);
+  const handleInputChange = (e) => {
+    const value = parseInt(e.target.value, 10);
+    if (!isNaN(value) && value >= 1) {
+      setCount(value);
+    }
+  };
   return (
     <div className="detail-container">
       <div className="detail-book">
@@ -149,6 +167,8 @@ const Detail = () => {
               type="number"
               value={count}
               min={1}
+              onChange={handleInputChange}
+              class="[&::-webkit-inner-spin-button]:appearance-none" 
               style={{ width: "140px", textAlign: "center" }}
             />
             <Button onClick={minusCount}>

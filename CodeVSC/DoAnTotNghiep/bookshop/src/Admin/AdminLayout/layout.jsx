@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
-import {Outlet} from "react-router-dom"
+import { Outlet } from "react-router-dom";
 import "./layout.css";
 import {
   AppstoreOutlined,
@@ -15,35 +15,38 @@ import { Button, Menu } from "antd";
 
 const AdminLayout = () => {
   const navigate = useNavigate();
-function getItem(label, key, icon, children, type,onClick) {
-  return {
-    key,
-    icon,
-    children,
-    label,
-    type,
-    onClick
-  };
-}
-const items = [
-  getItem("Option 1", "1", <PieChartOutlined />),
-  getItem("Option 2", "2", <DesktopOutlined />),
-  getItem("Option 3", "3", <ContainerOutlined />),
-  getItem("Navigation One", "sub1", <MailOutlined />, [
-    getItem("Option 5", "5", undefined, undefined, undefined, () => navigate("/Admin/ProductManagement")),
-    getItem("Option 6", "6"),
-    getItem("Option 7", "7"),
-    getItem("Option 8", "8"),
-  ]),
-  getItem("Navigation Two", "sub2", <AppstoreOutlined />, [
-    getItem("Option 9", "9"),
-    getItem("Option 10", "10"),
-    getItem("Submenu", "sub3", null, [
-      getItem("Option 11", "11"),
-      getItem("Option 12", "12"),
+  function getItem(label, key, icon, children, type, onClick) {
+    return {
+      key,
+      icon,
+      children,
+      label,
+      type,
+      onClick,
+    };
+  }
+  const items = [
+    getItem("Overview", "1", undefined, undefined, undefined, () =>
+      navigate("/Admin/")
+    ),
+    getItem("Management", "sub1", <MailOutlined />, [
+      getItem("Book Management", "5", undefined, undefined, undefined, () =>
+        navigate("/Admin/Product")
+      ),
+      getItem("Category Management", "6", undefined, undefined, undefined, () =>
+        navigate("/Admin/Category")
+      ),
+      getItem("User Management", "7", undefined, undefined, undefined, () =>
+        navigate("/Admin/User")
+      ),
+      getItem("Order Management", "8", undefined, undefined, undefined, () =>
+        navigate("/Admin/Order")
+      ),
+      getItem("Discount Management", "8", undefined, undefined, undefined, () =>
+        navigate("/Admin/Discount")
+      ),
     ]),
-  ]),
-];
+  ];
   const [collapsed, setCollapsed] = useState(false);
   const toggleCollapsed = () => {
     setCollapsed(!collapsed);
@@ -51,10 +54,10 @@ const items = [
   return (
     <div className="admin-layout-container">
       <div
-      className="side-bar-admin"
+        className="side-bar-admin"
         style={{
           width: "fit-content",
-          height:"100% !important"
+          height: "100% !important",
         }}
       >
         <Button
@@ -71,13 +74,17 @@ const items = [
           defaultOpenKeys={["sub1"]}
           mode="inline"
           theme="dark"
-          style={{backgroundColor:"inherit",color:"white",padding:"20px"}}
+          style={{
+            backgroundColor: "inherit",
+            color: "white",
+            padding: "20px",
+          }}
           inlineCollapsed={collapsed}
           items={items}
         />
       </div>
       <div className="admin-layout-main">
-          <Outlet />
+        <Outlet />
       </div>
     </div>
   );

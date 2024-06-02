@@ -2,7 +2,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 // Host của bạn
-const host = 'https://localhost:44324';
+const host = 'https://localhost:7239';
 
 const getToken = () => {
   const token = Cookies.get("token");

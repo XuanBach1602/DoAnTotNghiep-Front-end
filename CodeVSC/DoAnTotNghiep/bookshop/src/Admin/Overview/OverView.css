@@ -1,0 +1,21 @@
+.overview-container {
+    margin: 25px;
+}
+
+.overview-board-list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-top: 25px;
+}
+
+.overview-board-list > * {
+    display: flex;
+    flex-direction: column;
+    background-color:  #FFE6DD ;
+    height: 150px;
+    padding: 15px;
+    border-radius: 15px;
+    justify-content: center;
+    align-items: center;
+}
