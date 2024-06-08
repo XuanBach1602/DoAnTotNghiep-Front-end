@@ -30,22 +30,25 @@ const AdminLayout = () => {
       navigate("/Admin/")
     ),
     getItem("Management", "sub1", <MailOutlined />, [
-      getItem("Book Management", "5", undefined, undefined, undefined, () =>
+      getItem("Book Management", "2", undefined, undefined, undefined, () =>
         navigate("/Admin/Product")
       ),
-      getItem("Category Management", "6", undefined, undefined, undefined, () =>
+      getItem("Category Management", "3", undefined, undefined, undefined, () =>
         navigate("/Admin/Category")
       ),
-      getItem("User Management", "7", undefined, undefined, undefined, () =>
+      getItem("User Management", "4", undefined, undefined, undefined, () =>
         navigate("/Admin/User")
       ),
-      getItem("Order Management", "8", undefined, undefined, undefined, () =>
+      getItem("Order Management", "5", undefined, undefined, undefined, () =>
         navigate("/Admin/Order")
       ),
-      getItem("Discount Management", "8", undefined, undefined, undefined, () =>
+      getItem("Discount Management", "6", undefined, undefined, undefined, () =>
         navigate("/Admin/Discount")
       ),
     ]),
+    getItem("Chat", "7", undefined, undefined, undefined, () =>
+      navigate("/Admin/ChatManagement")
+    ),
   ];
   const [collapsed, setCollapsed] = useState(false);
   const toggleCollapsed = () => {

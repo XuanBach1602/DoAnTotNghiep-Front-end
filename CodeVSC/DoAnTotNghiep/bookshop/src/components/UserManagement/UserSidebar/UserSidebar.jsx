@@ -41,7 +41,8 @@ const items = [
     getItem('Change password', '12', undefined, undefined, undefined, () => navigate("/User/ChangePassword")),
   ]),
   getItem('Orders', '2', <AppstoreOutlined />, undefined, undefined, () => navigate("/User/Orders")),
-  getItem('Sign Out', '3', <AppstoreOutlined />, undefined, undefined, () => SignOut())
+  getItem('Chat', '3', <AppstoreOutlined />, undefined, undefined, () => navigate("/User/Chat")),
+  getItem('Sign Out', '4', <AppstoreOutlined />, undefined, undefined, () => SignOut())
 ];
 
 const getLevelKeys = (items1) => {

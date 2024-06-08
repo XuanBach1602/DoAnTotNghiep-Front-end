@@ -1,0 +1,60 @@
+.chat-managemnet-controller {
+    display: flex;
+    height: 100%;
+}
+
+.chat-left {
+    padding: 10px;;
+    width: 25%;
+    background-color: #f1f1f1; 
+}
+
+.chat-right {
+    flex: 1; /* Chiếm phần còn lại của chiều rộng */
+    background-color: #fff;
+}
+
+.chat-box {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    height: 60px;
+    border: 1px solid #CFCACA ;
+    margin: 10px 0;
+    padding:5px;
+    background-color: #fff;
+    border-radius: 10px;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.default-chat {
+    font-size: 24px;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.chat-content-1 {
+    flex: 1;
+    min-height: 450px;
+    padding: 10px;
+    background-color: #fff;
+    overflow-y: auto;
+    max-height: 450px;
+}
+
+.chat-content-1::-webkit-scrollbar {
+    display: none; /* Ẩn thanh cuộn trên WebKit (Chrome, Safari) */
+}
+
+.chat-content-1 {
+    -ms-overflow-style: none;  /* Ẩn thanh cuộn trên IE và Edge */
+    scrollbar-width: none;  /* Ẩn thanh cuộn trên Firefox */
+}
+
+.not-seen {
+    background-color: #CFCACA !important;
+}

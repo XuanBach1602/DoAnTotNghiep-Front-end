@@ -57,7 +57,7 @@ const PlaceOrder = () => {
         Name: displayUser.name,
         Total: total,
         TempTotal: tempTotal,
-        DiscountId: discountId? discountId:"",
+        DiscountId: discountId? discountId:null,
         Reduce: reduce
       };
       console.log(stripePublicKey);

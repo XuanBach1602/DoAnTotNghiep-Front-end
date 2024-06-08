@@ -1,0 +1,70 @@
+.chat-container {
+    margin: 0px 20px 20px;
+}
+
+.admin-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 100%;
+}
+
+.chat-navbar {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.chat-content {
+    flex: 1;
+    min-height: 400px;
+    padding: 10px;
+    background-color: #fff;
+    overflow-y: auto;
+    max-height: 400px;
+}
+
+.chat-content::-webkit-scrollbar {
+    display: none; /* Ẩn thanh cuộn trên WebKit (Chrome, Safari) */
+}
+
+.chat-content {
+    -ms-overflow-style: none;  /* Ẩn thanh cuộn trên IE và Edge */
+    scrollbar-width: none;  /* Ẩn thanh cuộn trên Firefox */
+}
+
+.message {
+    max-width: 60%;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    clear: both;
+}
+
+.sender {
+    background-color: #dcf8c6;
+    align-self: flex-end;
+    margin-left: auto;
+    border-bottom-right-radius: 0;
+}
+
+.receiver {
+    background-color: #f1f0f0;
+    align-self: flex-start;
+    margin-right: auto;
+    border-bottom-left-radius: 0;
+}
+
+.crossbar {
+    margin-left: -20px;
+  margin-right: -20px;
+  background-color: #B9B9B9;
+}
+.send-message-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.unactive {
+    cursor: default !important;
+}

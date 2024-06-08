@@ -30,6 +30,8 @@ import PaymentNotify from "./components/PaymentNotifiy/PaymentNotify";
 import OverView from "./Admin/Overview/OverView";
 import Discount from "./Admin/DiscountManagement/Discount";
 import ResetPassword from "./components/ResetPassword/ResetPassword";
+import Chat from "./components/UserManagement/Chat/Chat";
+import ChatManagement from "./Admin/ChatManagement/ChatManagement";
 
 function App() {
   const { isAuthenticated } = useUser();
@@ -60,6 +62,7 @@ function App() {
             <Route path="/admin/Discount" element={<Discount />} />
             <Route path="/admin/Order" element={<OrderManagement />} />
             <Route path="/admin/Order/:id" element={<OrderDetail />} />
+            <Route path="/admin/ChatManagement" element={<ChatManagement/>} />
           </Route>
           <Route element={<MainLayout />}>
             <Route path="/User" element={<UserLayout />}>
@@ -67,6 +70,7 @@ function App() {
               <Route path="/User/Account" index element={<Account />} />
               <Route path="/User/ChangePassword" element={<ChangePassword />} />
               <Route path="/User/Orders" element={<Order />} />
+              <Route path="/User/Chat" element={<Chat />} />
             </Route>
             <Route path="/Cart" element={<Cart />} />
             <Route path="/PlaceOrder" element={<PlaceOrder />} />
