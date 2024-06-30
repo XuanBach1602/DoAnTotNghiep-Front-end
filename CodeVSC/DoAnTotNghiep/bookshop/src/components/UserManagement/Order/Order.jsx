@@ -1,13 +1,14 @@
 import { useState, useEffect } from "react";
 import "./Order.css";
-import { getAsync, postAsync, putAsync } from "../../../Apis/axios";
-import { Input, Space, Button, Modal } from "antd";
+import { Input, Space, Button, Modal, Rate } from "antd";
 import { Navigate, useNavigate } from "react-router-dom";
-import { Rate } from "antd";
 import { toast } from "react-toastify";
 import { loadStripe } from '@stripe/stripe-js';
+import useApi from "../../../Apis/useApi";
 const { Search } = Input;
+const {confirm} = Modal;
 const Order = () => {
+  const  { deleteAsync, getAsync, postAsync, putAsync }  = useApi();
   const stripePublicKey = process.env.REACT_APP_STRIPE_PUBLIC_KEY;
   const stripePromise = loadStripe(stripePublicKey);
   const [orderItemList, setOrderItemList] = useState([]);
@@ -30,6 +31,22 @@ const setRate = (rate) => {
         rate: rate
     }));
 };
+
+const getStatus = (order) => {
+  if (order?.orderStatus == -1) {
+    return "Canceled";
+  } else if (order?.orderStatus == 1) {
+    return "Wait for pay";
+  } else if (order?.orderStatus == 2 && order?.shipStatus == 0) {
+   return "Not shipped yet";
+  } else if (order?.orderStatus == 2 && order?.shipStatus == 1) {
+    return "Shipping";
+  } else if (order?.orderStatus == 2 && order?.shipStatus == 2) {
+    return"Shipped";
+  } else {
+    return "Unknown status";
+  }
+};
   const navigate = useNavigate();
   const tabs = [
     { value: "0", name: "All" },
@@ -37,7 +54,7 @@ const setRate = (rate) => {
     { value: "5", name: "Wait for processing" },
     { value: "2", name: "Delivering" },
     { value: "3", name: "Complete" },
-    { value: "4", name: "Refund" },
+    { value: "4", name: "Canceled" },
   ];
   const { TextArea } = Input;
   const showComment = async (orderItem) => {
@@ -147,6 +164,17 @@ const setRate = (rate) => {
     fetchOrderData();
   }, [selectedTab, searchText]);
 
+  const showCancelConfirm = (orderId) => {
+    confirm({
+      title: 'Are you sure you want to cancel this order?',
+      onOk() {
+        Cancel(orderId);
+      },
+      onCancel() {        
+      },
+    });
+  };
+
   return (
     <div className="order-container">
       <div className="order-navbar">
@@ -184,7 +212,7 @@ const setRate = (rate) => {
                   key={orderItem.id}
                 >
                   <div className="order-item">
-                    <div className="order-item-info">
+                    <div className="order-item-info" onClick={() => navigate(`/User/Orders/${orderItem.orderId}`)}>
                       <img
                         src={orderItem.avatarUrl}
                         alt=""
@@ -196,12 +224,18 @@ const setRate = (rate) => {
                       </div>
                     </div>
                     <div className="order-item-total">
+                      <div style={{color:'black',fontSize:"20px"}}>{getStatus(orderItem)}</div>
                       ${orderItem.count * orderItem.price}
                     </div>
                   </div>
                   <div>
-                    Delivery address: <br /> {orderItem.name} (
-                    {orderItem.phoneNumber}) <br /> {orderItem.address}
+                    {/* Order Code: {orderItem.code}
+                    <br />
+                    Ordered Date: {orderItem?.createdDate}
+                    <br /> */}
+                    {/* Delivery address: <br /> {orderItem.name} (
+                    {orderItem.phoneNumber}) <br /> {orderItem.address} */}
+                    {orderItem.orderStatus === 1 && <div style={{color:"#F06E20"}}>Please pay before  {orderItem.expireDate} </div>}
                   </div>
                   <div className="operation">
                     {orderItem.orderStatus === 2 &&
@@ -214,9 +248,9 @@ const setRate = (rate) => {
                           Repurchase
                         </Button>
                       )}
-                    {orderItem.orderStatus === 2 &&
-                      orderItem.shipStatus === 0 && (
-                        <Button type="primary" danger onClick={() => Cancel(orderItem.orderId)}>
+                    {((orderItem.orderStatus === 2 &&
+                      orderItem.shipStatus === 0 )|| orderItem.orderStatus === 1) && (
+                        <Button type="primary" danger onClick={() => showCancelConfirm(orderItem.orderId)}>
                           Cancel Order
                         </Button>
                       )}
@@ -226,11 +260,6 @@ const setRate = (rate) => {
                           Delivering
                         </Button>
                       )}
-                    {orderItem.orderStatus === -1 && (
-                      <Button type="primary" disabled danger>
-                        Canceled
-                      </Button>
-                    )}
                     {orderItem.orderStatus === 2 &&
                       orderItem.shipStatus === 2 && (
                         <Button type="primary" danger onClick={() => showComment(orderItem)}>

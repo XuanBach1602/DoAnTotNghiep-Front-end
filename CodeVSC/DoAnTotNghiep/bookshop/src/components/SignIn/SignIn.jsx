@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import "./SignIn.css";
 import { Input, Form, Button } from "antd";
 import { useUser } from "../../UserContext";
 import { toast } from "react-toastify";
-import { postAsync } from "../../Apis/axios";
+import useApi from "../../Apis/useApi";
+import { useLoading } from "../../LoadingContext";
 
 const SignIn = () => {
+  const {setIsLoading} = useLoading();
+  const  { deleteAsync, getAsync, postAsync, putAsync }  = useApi();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [validation, setValidation] = useState("");
@@ -24,8 +27,10 @@ const SignIn = () => {
           email: email,
           password: password
         }
+        setIsLoading(true);
         const res = await postAsync("/api/Auth/SignIn",data);
         setIsAuthenticated(true);
+        setIsLoading(false);
         console.log(res);
         setUser(res.userInfo);
         Cookies.set("token", res.token, { expires: 7 }); // Token expires in 7 days
@@ -34,6 +39,10 @@ const SignIn = () => {
         toast.success("Sign in successfully!", {
           autoClose: 1000,
         });
+        if(res.userInfo.role.includes("Admin")){
+          navigate("/Admin");
+          return;
+        }
         if(redirectPath && redirectPath.toLowerCase() !== "/signup"){
           setTimeout(() => {
             navigate(redirectPath);
@@ -46,6 +55,7 @@ const SignIn = () => {
           }, 1000);
         }
       } catch (error) {
+        setIsLoading(false);
         setValidation(error.response.data.errMsg);
       }
     }

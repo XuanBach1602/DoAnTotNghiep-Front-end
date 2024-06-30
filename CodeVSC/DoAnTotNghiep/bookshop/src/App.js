@@ -19,7 +19,7 @@ import UserLayout from "./components/UserManagement/UserLayout/UserLayout";
 import Account from "./components/UserManagement/Account/Account";
 import ChangePassword from "./components/UserManagement/ChangePassword/ChangePassword";
 import Order from "./components/UserManagement/Order/Order";
-import AdminLayout from "./Admin/AdminLayout/layout";
+import AdminLayout from "./Admin/AdminLayout/AdminLayout";
 import Product from "./Admin/ProductManament/Product";
 import Category from "./Admin/CategoryManagement/Category";
 import UserManagement from "./Admin/UserManagement/UserManagement";
@@ -32,12 +32,15 @@ import Discount from "./Admin/DiscountManagement/Discount";
 import ResetPassword from "./components/ResetPassword/ResetPassword";
 import Chat from "./components/UserManagement/Chat/Chat";
 import ChatManagement from "./Admin/ChatManagement/ChatManagement";
+import LoadingSpinner from "./components/LoadingSpinner";
+import OrderInformation from "./components/Order/OrderInformation";
 
 function App() {
   const { isAuthenticated } = useUser();
   useEffect(() => console.log(isAuthenticated), []);
   return (
     <Router>
+      <LoadingSpinner />
       <ToastContainer />
       <Routes>
         <Route path="/signin" element={<SignIn />} />
@@ -46,6 +49,19 @@ function App() {
         <Route element={<MainLayout />}>
           <Route path="/" element={<HomePage />} />
           <Route path="/Book/:id" element={<Detail />} />
+          <Route element={<Authentication />}>
+            <Route path="/User" element={<UserLayout />}>
+              <Route path="/User" element={<Navigate to="/User/Account" />} />
+              <Route path="/User/Account" index element={<Account />} />
+              <Route path="/User/ChangePassword" element={<ChangePassword />} />
+              <Route path="/User/Orders" element={<Order />} />
+              <Route path="/User/Orders/:id" element={<OrderInformation />} />
+              <Route path="/User/Chat" element={<Chat />} />
+            </Route>
+            <Route path="/Cart" element={<Cart />} />
+            <Route path="/PlaceOrder" element={<PlaceOrder />} />
+           
+          </Route>
         </Route>
         {!isAuthenticated && (
           <Route path="*" element={<Navigate to="/signin" />} />
@@ -63,26 +79,28 @@ function App() {
             <Route path="/admin/Order" element={<OrderManagement />} />
             <Route path="/admin/Order/:id" element={<OrderDetail />} />
             <Route path="/admin/ChatManagement" element={<ChatManagement/>} />
+            <Route path="/admin/ChangePassword" element={<ChangePassword/>} />
           </Route>
-          <Route element={<MainLayout />}>
+          {/* <Route element={<MainLayout />}>
             <Route path="/User" element={<UserLayout />}>
               <Route path="/User" element={<Navigate to="/User/Account" />} />
               <Route path="/User/Account" index element={<Account />} />
               <Route path="/User/ChangePassword" element={<ChangePassword />} />
               <Route path="/User/Orders" element={<Order />} />
+              <Route path="/User/Orders/:id" element={<OrderInformation />} />
               <Route path="/User/Chat" element={<Chat />} />
             </Route>
             <Route path="/Cart" element={<Cart />} />
             <Route path="/PlaceOrder" element={<PlaceOrder />} />
            
-          </Route>
+          </Route> */}
           <Route path="/PaymentNotify" element={<PaymentNotify />} />
         </Route>
 
         {/* )} */}
 
         {/* Routes for unauthenticated users */}
-        {!isAuthenticated && <Route element={<Navigate to="/signin" />} />}
+        {/* {!isAuthenticated && <Route element={<Navigate to="/signin" />} />} */}
       </Routes>
     </Router>
   );

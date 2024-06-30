@@ -12,8 +12,10 @@ import {
   PlusOutlined,
   MinusOutlined,
 } from "@ant-design/icons";
+import useApi from "../../Apis/useApi";
 
 const Detail = () => {
+  const  { deleteAsync, getAsync, postAsync, putAsync }  = useApi();
   const navigate = useNavigate();
   const { id } = useParams();
   const [count, setCount] = useState(1);
@@ -100,6 +102,12 @@ const Detail = () => {
       navigate("/signin");
       return;
     }
+    if(count > book.quantity){
+      toast.error(`Quantity must be less than ${book?.quantity}`, {
+        autoClose: 2000,
+      });
+      return;
+    }
     try {
       var data = {
           BookId : id,
@@ -166,9 +174,10 @@ const Detail = () => {
             <Input
               type="number"
               value={count}
-              min={1}
+              // min={1}
+              defaultValue={1}
               onChange={handleInputChange}
-              class="[&::-webkit-inner-spin-button]:appearance-none" 
+              className="[&::-webkit-inner-spin-button]:appearance-none" 
               style={{ width: "140px", textAlign: "center" }}
             />
             <Button onClick={minusCount}>
@@ -178,9 +187,9 @@ const Detail = () => {
             <span>{book.quantity} products available</span>
           </div>
           <div className="button-row">
-            <Button type="primary" danger>
+            {/* <Button type="primary" danger>
               Buy Now
-            </Button>
+            </Button> */}
             <Button type="primary" onClick={() => addToCart()}>
               <ShoppingCartOutlined />
               Add To Cart
@@ -190,17 +199,19 @@ const Detail = () => {
       </div>
       <div className="book-description">
         <div className="partion-title">DESCRIPTION</div>
+        <div style={{fontSize:"16px",lineHeight:"1.6"}}>
         {book.description}
+        </div>
       </div>
 
       <div className="books-in-this-category">
         <div className="partion-title">BOOKS IN THIS CATEGORY</div>
 
         <div className="reference-book">
-          {bookList.map((product) => (
+          {bookList.map((product,key) => (
             <Book
               className="book"
-              key={product.id}
+              key={key}
               id={product.id}
               imageUrl={product.avatarUrl}
               title={product.title}

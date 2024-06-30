@@ -27,3 +27,21 @@
 .detail-book-modal {
     top: 20px;
 } 
+
+
+.plus-button {
+    margin-right: 15px;
+    background: #41E32B;
+}
+.plus-icon {
+    color: white ;
+    font-size: 20px;   
+}
+
+.delete-icon {
+    color: red;
+}
+
+.edit-icon {
+    color:#1897D7;
+}

@@ -1,30 +1,29 @@
 import React, { useState, useEffect, Component } from "react";
 import DataTable from "react-data-table-component";
 import "./Product.css";
-import { deleteAsync, getAsync, postAsync, putAsync } from "../../Apis/axios";
+import useApi from "../../Apis/useApi";
 import {
-  SearchOutlined,
-  EditOutlined,
-  DeleteOutlined,
+  EditFilled,
   UploadOutlined,
-  PlusOutlined
+  PlusCircleOutlined,
+  DeleteFilled,
 } from "@ant-design/icons";
 import {
   Button,
   Modal,
   Input,
   Space,
-  Table,
   Select,
-  message,
   Popconfirm,
-  Upload,
   Image,
 } from "antd";
 import { toast } from "react-toastify";
+import { useLoading } from "../../LoadingContext";
 const { Search } = Input;
 const { Option } = Select;
 const Product = () => {
+  const { setIsLoading } = useLoading();
+  const  { deleteAsync, getAsync, postAsync, putAsync }  = useApi();
   const [bookList, setBookList] = useState([]);
   const [categoryList, setCategoryList] = useState([]);
   const [pagination, setPagination] = useState({
@@ -135,8 +134,8 @@ const Product = () => {
     <div>
       <Space>
         <Button
-          type="primary"
-          icon={<EditOutlined />}
+          type="normal"
+          icon={<EditFilled style={{color:"#1897D7"}} className="edit-icon" />}
           onClick={() => handleEdit(row)}
         />
         <Popconfirm
@@ -145,7 +144,7 @@ const Product = () => {
           cancelText="No"
           onConfirm={() => deleteBook(row.id)}
         >
-          <Button type="danger" icon={<DeleteOutlined />} />
+          <Button type="danger" icon={<DeleteFilled style={{color:"red"}} />} />
         </Popconfirm>
       </Space>
     </div>
@@ -252,24 +251,30 @@ const Product = () => {
           formDataToSend.append("CategoryId",formData.categoryId);
       if(formData.id !== 0){
         try {
+          setIsLoading(true);
           await putAsync("/api/Book/Update", formDataToSend);
           setModalDetailVisible(false);
           fetchBookList();
           toast.success("Update the book successfully", {
             autoClose: 1000,
           });
-        } catch (error) {}
+          setIsLoading(false);
+        } catch (error) {
+          setIsLoading(false);
+        }
       }
       else {
         try {
           await postAsync("/api/Book/Add",formDataToSend);
+          setIsLoading(true);
           setModalDetailVisible(false);
           fetchBookList();
           toast.success("Add new book successfully", {
             autoClose: 1000,
           });
+          setIsLoading(false);
         } catch (error) {
-          
+          setIsLoading(false);
         }
       }
     } else {
@@ -318,7 +323,7 @@ const Product = () => {
   return (
     <div style={{ width: "100%" }}>
       <DataTable
-        title="Book Data"
+        title="Book List"
         columns={columns}
         data={bookList}
         pagination
@@ -344,7 +349,10 @@ const Product = () => {
                   </Option>
                 ))}
               </Select>
-            <Button onClick={showAddForm} style={{marginRight:"15px"}} type="default"><PlusOutlined /></Button>
+              <Button onClick={showAddForm} className="plus-button" type="normal">
+  <PlusCircleOutlined className="plus-icon" />
+</Button>
+
             <Search
             style={{ width: "250px" }}
             placeholder="Search by title"

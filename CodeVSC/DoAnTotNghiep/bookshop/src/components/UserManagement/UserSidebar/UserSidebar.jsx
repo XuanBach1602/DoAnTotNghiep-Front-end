@@ -1,14 +1,19 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AppstoreOutlined, MailOutlined } from '@ant-design/icons';
-import { getAsync, postAsync } from '../../../Apis/axios';
+import {
+  UserOutlined,
+  LockOutlined,
+  ShoppingCartOutlined,
+  MessageOutlined,
+  LogoutOutlined } from '@ant-design/icons';
 import { Menu } from 'antd';
 import { useUser } from '../../../UserContext';
 import { toast } from "react-toastify";
 import Cookies from 'js-cookie';
+import useApi from '../../../Apis/useApi';
 
 const UserSidebar = () => {
-
+  const  { deleteAsync, getAsync, postAsync, putAsync }  = useApi();
 function getItem(label, key, icon, children, type, onClick) {
   return {
     key,
@@ -36,13 +41,13 @@ const SignOut = async () => {
 }
 
 const items = [
-  getItem('My account', '1', <MailOutlined />, [
-    getItem('Account information', '11', undefined, undefined, undefined, () => navigate("/User/Account")),
-    getItem('Change password', '12', undefined, undefined, undefined, () => navigate("/User/ChangePassword")),
+  getItem('My account', '1', <UserOutlined style={{ color: '#1890ff' }} />, [
+    getItem('Account information', '11', <UserOutlined style={{ color: '#1890ff' }} />, undefined, undefined, () => navigate("/User/Account")),
+    getItem('Change password', '12', <LockOutlined style={{ color: '#d4380d' }} />, undefined, undefined, () => navigate("/User/ChangePassword")),
   ]),
-  getItem('Orders', '2', <AppstoreOutlined />, undefined, undefined, () => navigate("/User/Orders")),
-  getItem('Chat', '3', <AppstoreOutlined />, undefined, undefined, () => navigate("/User/Chat")),
-  getItem('Sign Out', '4', <AppstoreOutlined />, undefined, undefined, () => SignOut())
+  getItem('Orders', '2', <ShoppingCartOutlined style={{ color: '#fa8c16' }} />, undefined, undefined, () => navigate("/User/Orders")),
+  getItem('Chat', '3', <MessageOutlined style={{ color: '#722ed1' }} />, undefined, undefined, () => navigate("/User/Chat")),
+  getItem('Sign Out', '4', <LogoutOutlined style={{ color: '#ff4d4f' }} />, undefined, undefined, () => SignOut())
 ];
 
 const getLevelKeys = (items1) => {

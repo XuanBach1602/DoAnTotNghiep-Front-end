@@ -4,10 +4,14 @@ import { useUser } from "../../UserContext";
 import React, { useEffect, useState } from "react";
 import { Modal, Button, Input, Dropdown, Checkbox, Space, Menu } from "antd";
 import { useOutletContext } from "react-router-dom";
-import { getAsync, postAsync, putAsync, deleteAsync } from "../../Apis/axios";
 import { useNavigate } from "react-router-dom";
 import { loadStripe } from "@stripe/stripe-js";
+import { toast } from "react-toastify";
+import useApi from "../../Apis/useApi";
+import { useLoading } from "../../LoadingContext";
 const PlaceOrder = () => {
+  const { setIsLoading } = useLoading();
+  const  { deleteAsync, getAsync, postAsync, putAsync }  = useApi();
   const stripePublicKey = process.env.REACT_APP_STRIPE_PUBLIC_KEY;
   const stripePromise = loadStripe(stripePublicKey);
   const navigate = useNavigate();
@@ -61,20 +65,28 @@ const PlaceOrder = () => {
         Reduce: reduce
       };
       console.log(stripePublicKey);
+      setIsLoading(true);
       var res = await postAsync("/api/Order/PlaceOrder", data);
       fetchCartData();
+      if(total == 0) {
+        navigate("/");
+        toast.success("Order successfully", {
+          autoClose: 1000,
+        });
+      }
       const sessionId = res.sessionId;
       console.log(sessionId);
+      setIsLoading(false);
       const stripe = await stripePromise;
       const { error } = await stripe.redirectToCheckout({ sessionId });
 
       if (error) {
         console.error("Error redirecting to checkout:", error);
       }
-      // setTimeout(() => {
-      //   navigate("/");
-      // }, 1000);
-    } catch (error) {}
+      
+    } catch (error) {
+      setIsLoading(false);
+    }
   };
 
   const handleNameChange = (e) => {
@@ -145,6 +157,7 @@ const PlaceOrder = () => {
               if (e.target.checked) {
                 setVoucherName(voucher.name);
                 setDiscountId(voucher.id);
+                console.log(tempTotal)
                 var discount = 0;
                 if (voucher.discount > tempTotal) discount = tempTotal;
                 else discount = voucher.discount;
@@ -217,7 +230,7 @@ const PlaceOrder = () => {
         <div style={{ color: "rgb(51, 178, 255)" }}>Place Order</div>
       </div>
       <div className="placeorder-main">
-        <div className="placeorder-header">
+        <div style={{padding:"0px"}} className="placeorder-header">
           <div>
             <HomeTwoTone twoToneColor={"red"} /> Delivery Address
           </div>

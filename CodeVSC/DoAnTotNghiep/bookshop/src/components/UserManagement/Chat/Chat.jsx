@@ -2,11 +2,12 @@ import "./Chat.css";
 import React, { useEffect, useState,useRef  } from "react";
 import { Input } from "antd";
 import { SendOutlined, SmileOutlined } from "@ant-design/icons";
-import { getAsync } from "../../../Apis/axios";
 import { useUser } from "../../../UserContext";
 import * as signalR from "@microsoft/signalr";
 import Cookies from 'js-cookie';
+import useApi from "../../../Apis/useApi";
 const Chat = () => {
+    const  { deleteAsync, getAsync, postAsync, putAsync }  = useApi();
     const {user} = useUser();
     const [messages, setMessages] =useState([
         { id: 1, text: "Hello!", type: "receiver" },
@@ -91,7 +92,6 @@ const Chat = () => {
     }, [connection]);
     return (
         <div className="chat-container">
-            {/* <hr className="crossbar" style={{marginTop:"0"}}/> */}
             <div className="chat-navbar">
                 <img className="admin-img" src="../admin.png" alt="" />
                 <div>Admin</div>
@@ -111,7 +111,6 @@ const Chat = () => {
                 <Input value={tempMessage} placeholder="Write something to send" onChange={(e) => setTempMessage(e.target.value)}/>
                 <SendOutlined style={{cursor:"pointer", color:"#0ED9F5"}} className={`${!tempMessage?"unactive":""}`} onClick={sendMessageToAdmin}/>
             </div>
-            {/* <hr className="crossbar"/> */}
         </div>
     )
 }

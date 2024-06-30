@@ -1,18 +1,16 @@
 import DataTable from "react-data-table-component";
 import "./OrderManagement.css";
-import { deleteAsync, getAsync, postAsync, putAsync } from "../../Apis/axios";
 import { toast } from "react-toastify";
 import { Button, Input, Space, Select, Popconfirm, Search } from "antd";
 import {
-  EditOutlined,
-  DeleteOutlined,
-  LockOutlined,
-  UnlockOutlined,
+  EditFilled,
 } from "@ant-design/icons";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import useApi from "../../Apis/useApi";
 
 const OrderManagement = () => {
+  const  { deleteAsync, getAsync, postAsync, putAsync }  = useApi();
   const [orderList, setOrderList] = useState([]);
   const [pagination, setPagination] = useState({
     current: 1,
@@ -119,8 +117,8 @@ const OrderManagement = () => {
     <div>
       <Space>
         <Button
-          type="primary"
-          icon={<EditOutlined />}
+          type="normal"
+          icon={<EditFilled className="edit-icon"/>}
           onClick={() => navigate(`/Admin/Order/${row.id}`)}
         />
         {/* <Popconfirm
@@ -165,13 +163,13 @@ const OrderManagement = () => {
       name: "Code",
       selector: (row) => row.code,
       sortable: true,
-      width: "100px",
+      width: "150px",
     },
     {
       name: "Email",
       selector: (row) => row.email,
       sortable: true,
-      width: "200px",
+      width: "250px",
     },
     {
       name: "Phone Number",

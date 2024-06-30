@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { Input, Form, Button } from "antd";
 import { toast } from "react-toastify";
-import { postAsync } from "../../Apis/axios";
+import useApi from "../../Apis/useApi";
+import { useLoading } from "../../LoadingContext";
 import "./SignUp.css";
 const SignUp = () => {
+  const {setIsLoading} = useLoading();
+  const  { deleteAsync, getAsync, postAsync, putAsync }  = useApi();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -65,16 +67,19 @@ const SignUp = () => {
           "Content-Type": "multipart/form-data",
         },
       };
+      setIsLoading(true);
       var res = await postAsync("/api/auth/SignUp",formData, config);
       setValidationMessage("");
       toast.success("Create the account successfully",{
         autoClose:1000,
       });
+      setIsLoading(false);
       setTimeout(() => {
         navigate("/signin");
       }, 1000);
       console.log(res);
     } catch (error) {
+      setIsLoading(false);
       console.log(error);
        setValidationMessage(error.response.data.join(","));
     }

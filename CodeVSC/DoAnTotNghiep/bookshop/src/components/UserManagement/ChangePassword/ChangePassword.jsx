@@ -1,10 +1,11 @@
 import { Button, Form, Input, Select, Space, DatePicker } from "antd";
 import { useState } from "react";
 import { toast } from "react-toastify";
-import { putAsync } from "../../../Apis/axios";
 import "./ChangePassword.css";
+import useApi from "../../../Apis/useApi";
 
 const ChangePassword = () => {
+  const  { deleteAsync, getAsync, postAsync, putAsync }  = useApi();
     const [currentPassword, setCurrentPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");

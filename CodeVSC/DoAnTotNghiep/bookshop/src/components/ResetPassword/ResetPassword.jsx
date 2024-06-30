@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { getAsync } from "../../Apis/axios";
+import useApi from "../../Apis/useApi";
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 const ResetPassword = () => {
+    const  { deleteAsync, getAsync, postAsync, putAsync }  = useApi();
     const [email, setEmail] = useState("");
     const [notify, setNotify] = useState("");
     const navigate = useNavigate();

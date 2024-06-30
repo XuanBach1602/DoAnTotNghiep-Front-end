@@ -19,7 +19,7 @@ const Comment = ({comment}) => {
           allowHalf
           value={commentInfo.rate}
         />
-        <div>{commentInfo.createdDate}</div>
+        <div>{comment.createdDate}</div>
         <div className="comment-content">{commentInfo.content}</div>
       </div>
     </div>

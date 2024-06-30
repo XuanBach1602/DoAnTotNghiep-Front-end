@@ -1,16 +1,17 @@
 import React, { useState, useEffect, Component } from "react";
 import DataTable from "react-data-table-component";
 import "./UserManagement.css";
-import { deleteAsync, getAsync, postAsync, putAsync } from "../../Apis/axios";
 import { toast } from "react-toastify";
 import { Button, Input, Space, Select, Popconfirm } from "antd";
 import {
   EditOutlined,
-  DeleteOutlined,
+  DeleteFilled,
   LockOutlined,
   UnlockOutlined,
 } from "@ant-design/icons";
+import useApi from "../../Apis/useApi";
 const UserManagement = () => {
+  const  { deleteAsync, getAsync, postAsync, putAsync }  = useApi();
   const { Search } = Input;
   const { Option } = Select;
   const [userList, setUserList] = useState();
@@ -148,7 +149,7 @@ const UserManagement = () => {
           cancelText="No"
           onConfirm={() => deleteUser(row.id)}
         >
-          <Button type="danger" icon={<DeleteOutlined />} />
+          <Button type="danger" icon={<DeleteFilled className="delete-icon"/>} />
         </Popconfirm>
       </Space>
     </div>

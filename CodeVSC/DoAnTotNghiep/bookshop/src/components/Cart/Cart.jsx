@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,useOutletContext } from "react-router-dom";
 import "./Cart.css";
 import { Checkbox, Button, Input, Modal, Space, Popconfirm } from "antd";
-import { PlusOutlined, MinusOutlined, DeleteOutlined } from "@ant-design/icons";
-import { getAsync, postAsync, putAsync, deleteAsync } from "../../Apis/axios";
+import { PlusOutlined, MinusOutlined, DeleteFilled } from "@ant-design/icons";
+import useApi from "../../Apis/useApi";
 import { toast } from "react-toastify";
 
 const Cart = () => {
+  const  { deleteAsync, getAsync, postAsync, putAsync }  = useApi();
   const [cartItemList, setCartItemList] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [currentId, setCurrentId] = useState(0);
   const [isCheckAll, setIsCheckAll] = useState(false);
   const [selectedCount, setSelectedCount] = useState(0);
-
+  const [searchText,fetchCartData] = useOutletContext();
   const navigate = useNavigate();
 
   const fetchCartItemData = async () => {
@@ -28,6 +29,12 @@ const Cart = () => {
   const handleIncreaseCount = async (index, id) => {
     var count = cartItemList[index].count + 1;
     try {
+      if(count > cartItemList[index].quantity){
+        toast.error(`Quantity must be less than ${cartItemList[index].quantity}`, {
+          autoClose: 1000,
+        });
+        return;
+      }
       var res = await putAsync(
         `/api/CartItem/UpdateQuantity?id=${id}&count=${count}`
       );
@@ -68,6 +75,7 @@ const Cart = () => {
     try {
       const res = await deleteAsync("/api/CartItem/Delete?id=" + id);
       fetchCartItemData();
+      fetchCartData();
     } catch (error) {}
   };
 
@@ -136,10 +144,15 @@ const Cart = () => {
   const handleChangeCount = async (e, index, id) => {
     const value = parseInt(e.target.value, 10);
     if (!isNaN(value) && value >= 1) {
-      var count = cartItemList[index].count + 1;
+      if(value > cartItemList[index].quantity){
+        toast.error(`Quantity must be less than ${cartItemList[index].quantity}`, {
+          autoClose: 1000,
+        });
+        return;
+      }
       try {
         var res = await putAsync(
-          `/api/CartItem/UpdateQuantity?id=${id}&count=${count}`
+          `/api/CartItem/UpdateQuantity?id=${id}&count=${value}`
         );
         fetchCartItemData();
       } catch (error) {}
@@ -189,7 +202,7 @@ const Cart = () => {
                   <Input
                     type="number"
                     min={0}
-                    style={{ width: "60px", textAlign: "center" }}
+                    style={{ width: "100px", textAlign: "center" }}
                     onChange={(e) => handleChangeCount(e, index, cartItem.id)}
                     value={cartItem.count}
                   />
@@ -205,12 +218,13 @@ const Cart = () => {
                 <div>
                   <Space>
                     <Popconfirm
-                      title="Bạn có chắc chắn muốn xóa?"
+                      title="
+Are you sure you want to delete?"
                       okText="Yes"
                       cancelText="No"
                       onConfirm={() => deleteCartItem(cartItem.id)}
                     >
-                      <Button type="danger" icon={<DeleteOutlined />} />
+                      <Button type="danger" icon={<DeleteFilled style={{color:"red"}} />} />
                     </Popconfirm>
                   </Space>
                 </div>

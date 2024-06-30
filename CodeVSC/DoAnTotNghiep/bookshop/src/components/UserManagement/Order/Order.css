@@ -49,15 +49,18 @@
 }
 
 .order-item-total{
+    height: 80px;
     color: orangered;
     font-size: 18px;
     margin-right: 15px;
+    text-align: right;
 }
 
 .order-item-info {
     display: flex;
     align-items: center;
     width: 700px;
+    cursor: pointer;
 }
 
 .operation {

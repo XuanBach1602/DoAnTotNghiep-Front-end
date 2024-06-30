@@ -30,8 +30,15 @@
     background-color: #B2AFA4 ;
 }
 
+.category-content  {
+  display: flex;
+  align-items: center;
+  min-height: 40px;
+  gap: 8px;
+}
+
 .selected-category {
-  background-color: #B2AFA4 ;
+  background-color: #BCD6B9 ;
 }
 
 .blinking-icon {

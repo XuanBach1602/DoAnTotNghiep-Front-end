@@ -1,19 +1,20 @@
 import React, { useState, useEffect, Component } from "react";
 import DataTable from "react-data-table-component";
-import { deleteAsync, getAsync, postAsync, putAsync } from "../../Apis/axios";
 import { toast } from "react-toastify";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import dayjs from "dayjs";
 import {
   SearchOutlined,
-  EditOutlined,
-  DeleteOutlined,
+  EditFilled,
+  DeleteFilled,
   UploadOutlined,
-  PlusOutlined,
+  PlusCircleOutlined,
 } from "@ant-design/icons";
 import { Button, Modal, Input, Space, Popconfirm, DatePicker, Select, Rate } from "antd";
 import "./Discount.css";
+import useApi from "../../Apis/useApi";
 const Discount = () => {
+  const  { deleteAsync, getAsync, postAsync, putAsync }  = useApi();
   const { Search } = Input;
   const { Option } = Select;
   const [discountList, setDiscountList] = useState([]);
@@ -148,8 +149,8 @@ const Discount = () => {
     <div>
       <Space>
         <Button
-          type="primary"
-          icon={<EditOutlined />}
+          type="normal"
+          icon={<EditFilled className="edit-icon"/>}
           onClick={() => handleEdit(row)}
         />
         <Popconfirm
@@ -158,7 +159,7 @@ const Discount = () => {
           cancelText="No"
           onConfirm={() => deleteCategory(row.id)}
         >
-          <Button type="danger" icon={<DeleteOutlined />} />
+          <Button type="danger" icon={<DeleteFilled className="delete-icon" />} />
         </Popconfirm>
       </Space>
     </div>
@@ -336,10 +337,10 @@ const Discount = () => {
           <div>
             <Button
               onClick={showAddForm}
-              style={{ marginRight: "15px" }}
-              type="default"
+              className="plus-button"
+              type="normal"
             >
-              <PlusOutlined />
+              <PlusCircleOutlined className="plus-icon"/>
             </Button>
             <Search
               style={{ width: "250px" }}

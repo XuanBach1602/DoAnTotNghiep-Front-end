@@ -26,7 +26,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     -webkit-line-clamp: 2; /* Số dòng tối đa */
-    max-height: 2.4em; /* Chiều cao tối đa tương ứng với 2 dòng */
+    /* max-height: 2.4em; */
 }
 
 .book-price {

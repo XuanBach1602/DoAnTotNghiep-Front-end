@@ -5,11 +5,18 @@
 }
 
 .side-bar-admin {
-    background-color: #191919;
-    /* display: block; */
+    background-color: #545151  ;
     height: 100%;
 }
 
 .side-bar-admin .ant-menu.ant-menu-sub.ant-menu-inline{
-    background-color:  #191919 !important;
+    background-color:  #545151  !important;
+}
+
+.side-bar-admin .ant-menu-title-content {
+    color: white;
+}
+
+.management-icon {
+    color: #63DEDC !important;
 }

@@ -4,9 +4,12 @@ import customParseFormat from "dayjs/plugin/customParseFormat";
 import dayjs from "dayjs";
 import { useUser } from "../../../UserContext";
 import { useEffect, useState } from "react";
-import { putAsync } from "../../../Apis/axios";
+import useApi from "../../../Apis/useApi";
 import { toast } from "react-toastify";
+import { useLoading } from "../../../LoadingContext";
 const Account = () => {
+  const { setIsLoading } = useLoading();
+  const  { deleteAsync, getAsync, postAsync, putAsync }  = useApi();
   const { user, fetchUserData } = useUser();
   const [userInfo, setUserInfo] = useState({ ...user });
   const [selectedFile, setSelectedFile] = useState(null);
@@ -81,14 +84,19 @@ const Account = () => {
       formData.append("DateOfBirth", userInfo.dateOfBirth);
       formData.append("Avatar",selectedFile)
       try {
+        setIsLoading(true);
         var res = await putAsync("/api/User/Update",formData);
         fetchUserData();
         toast.success("Update information successfully", {
           autoClose: 1000,
         });
-      } catch (error) {}
+        setIsLoading(false);
+      } catch (error) {
+        setIsLoading(false);
+      }
       setError("")
       console.log(userInfo);
+      
     }
   };
 
@@ -178,7 +186,7 @@ const Account = () => {
 
         <div className="account-main-right">
           <img
-            src={userInfo.avatarUrl}
+            src={userInfo.avatarUrl? userInfo.avatarUrl:"../user.png"}
             className="account-avatar"
             alt="user avatar"
           />

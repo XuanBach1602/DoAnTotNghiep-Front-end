@@ -1,7 +1,7 @@
 import { Input, Space } from "antd";
 import "./ChatManagement.css";
 import { useEffect, useState, useRef } from "react";
-import { getAsync, putAsync } from "../../Apis/axios";
+import useApi from "../../Apis/useApi";
 import { useUser } from "../../UserContext";
 import * as signalR from "@microsoft/signalr";
 import { SmileOutlined, SendOutlined } from "@ant-design/icons";
@@ -9,6 +9,7 @@ import Cookies from 'js-cookie';
 import moment from 'moment';
 const { Search } = Input;
 const ChatManagement = () => {
+  const  { deleteAsync, getAsync, postAsync, putAsync }  = useApi();
   const [conversationList, setConversationList] = useState([]);
   const {user} = useUser();
   const chatContentRef = useRef(null);
@@ -24,6 +25,14 @@ const ChatManagement = () => {
     }, [messages]);
     const [tempMessage, setTempMessage] = useState("");
     const [connection, setConnection] = useState(null);
+    const [userList, setUserList] = useState([
+      {
+        name:"Xuan Bach",
+        avatarUrl:"../admin.png"
+      }
+    ]);
+
+    const [searchTerm, setSearchTerm] = useState('');
 
     const fetchMessage = async () => {
       console.log(conversation?.id)
@@ -105,6 +114,16 @@ const ChatManagement = () => {
     } catch (error) {}
   };
 
+  const fetchUserList = async () => {
+    if(!searchTerm) return;
+    try {
+      var result = await getAsync("/api/Chat/SearchUser?search=" + searchTerm);
+      setUserList(result);
+    } catch (error) {
+      
+    }
+  }
+
   const updateSeenStatus = async (conversation) => {
     try {
       await putAsync("/api/Chat/UpdateSeenStatus?conversationId=" + conversation.id);
@@ -116,42 +135,77 @@ const ChatManagement = () => {
     }
   }
 
+  const createConversation = async (userId) => {
+    try {
+      var result = await postAsync("/api/Chat/CreateConversation?userId=" + userId);
+      setSearchTerm("");
+      setConversationList(prevState => ([
+        result,
+        ...prevState
+      ]));
+      setConversation(result);
+    } catch (error) {
+      
+    }
+  }
+
   useEffect(() => {
     fetchConversation();
   }, []);
 
   useEffect(() => {
+    fetchUserList();
+  },[searchTerm]);
+
+  useEffect(() => {
     fetchMessage();
   },[conversation?.id])
 
-  const onSearch = (value, _e, info) => console.log(info?.source, value);
+  const onSearch = (e) => {
+    console.log(e.target.value)
+    setSearchTerm(e.target.value);
+  }
   return (
     <div className="chat-managemnet-controller">
       <div className="chat-left">
         <div style={{ fontSize: "24px", fontWeight: "500",marginBottom:"10px" }}>Chats</div>
-        <Search
-          placeholder="Fill name"
-          onSearch={onSearch}
-          enterButton
-        />
+        <div className="app">
+      <Search
+        placeholder="Fill name"
+        onChange={onSearch}
+        enterButton
+        value={searchTerm}
+      />
+      {searchTerm && (
+        <div className="user-list">
+          {userList.map((user, index) => (
+            <div key={index} className="user-item" onClick={() =>createConversation(user.id)}>
+              <img src={user.avatarUrl?user.avatarUrl:"../user.png"} alt={user.name} className="avatar" />
+              <span className="name">{user.name}</span>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
         <div className="list-chat">
-          {conversationList.map((conversation) => (
-            <div className={`chat-box ${conversation.isSeen ?"":"not-seen"}`} onClick={() =>{
-                setConversation(conversation);
-                updateSeenStatus(conversation);
-                console.log(conversation)
+          {conversationList.map((conversation1) => (
+            <div className={`chat-box ${conversation1.isSeen ?"":"not-seen"} ${conversation.id === conversation1.id?"selected-conversation":""}`}
+            onClick={() =>{
+                setConversation(conversation1);
+                updateSeenStatus(conversation1);
+                console.log(conversation1)
             }}>
               <img
                 style={{ width: "40px", height: "40px", borderRadius: "100%" }}
-                src={conversation.imgUrl}
+                src={conversation1.imgUrl? conversation1.imgUrl:"../user.png"}
                 alt=""
               />
               <div>
                 <div style={{ fontSize: "18px", fontWeight: "500" }}>
-                  {conversation.name}
+                  {conversation1.name}
                 </div>
-                <div style={{ overflow: "hidden" }}>{conversation.lastMessage}</div>
-                <div style={{fontSize:"12px"}}>{formatDateTime(conversation.lastMessageTime)}</div>
+                <div style={{ overflow: "hidden" }}>{conversation1.lastMessage}</div>
+                <div style={{fontSize:"12px"}}>{conversation1.lastMessage?formatDateTime(conversation1.lastMessageTime):""}</div>
               </div>
             </div>
           ))}
@@ -167,7 +221,7 @@ const ChatManagement = () => {
                 <div style={{margin:"20px", height:"100%"}}>
             {/* <hr className="crossbar" style={{marginTop:"0"}}/> */}
             <div className="chat-navbar">
-                <img className="admin-img" src={conversation.imgUrl} alt="" />
+                <img className="admin-img" src={conversation.imgUrl?conversation.imgUrl:"../user.png"} alt="" />
                 <div>{conversation.name}</div>
             </div>
             <hr className="crossbar"/>

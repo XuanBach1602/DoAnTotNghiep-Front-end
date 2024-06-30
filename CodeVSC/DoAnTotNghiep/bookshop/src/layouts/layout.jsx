@@ -20,7 +20,6 @@ const MainLayout = () => {
   const navigate = useNavigate();
   const onSearch = (e) => {
     setSearchText(e);
-    navigate("/");
     console.log(searchText);
   };
 
@@ -48,6 +47,7 @@ const MainLayout = () => {
             placeholder="Fill search text"
             onSearch={onSearch}
             enterButton
+            defaultValue={searchText}
           />
         </div>
         <div className="navbar-icon-list">

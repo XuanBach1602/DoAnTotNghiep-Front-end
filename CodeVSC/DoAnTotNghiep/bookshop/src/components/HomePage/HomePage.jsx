@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import "./HomePage.css";
-import { getAsync } from "../../Apis/axios";
 import { Input, Pagination } from "antd";
 import Book from "../Book/Book";
 import { useOutletContext } from "react-router-dom";
-import { FireOutlined } from "@ant-design/icons";
+import { FireOutlined, MoneyCollectFilled } from "@ant-design/icons";
+import useApi from "../../Apis/useApi";
 const HomePage = () => {
+  const { deleteAsync, getAsync, postAsync, putAsync } = useApi();
   const [searchText, fetchCartData] = useOutletContext();
   const [categoryList, setCategoryList] = useState([]);
   const [sortModel, setSortModel] = useState({
@@ -21,7 +22,6 @@ const HomePage = () => {
   const [bookList, setBookList] = useState([]);
   const [hotProducts, setHotProducts] = useState([]);
   const [hotCategories, setHotCategories] = useState([]);
-  const [shoudSetCurrentPage, setShouldSetCurrentPage] = useState(false);
   const sortOptions = [
     { id: 1, name: "Best seller" },
     { id: 2, name: "New Books" },
@@ -34,22 +34,39 @@ const HomePage = () => {
     setPageSize(pagesize);
   };
   const setCategoryId = (value) => {
-    setSortModel((prevSortModel) => ({ ...prevSortModel, CategoryId: value }));
+    setSortModel((prevSortModel) => ({
+      ...prevSortModel,
+      CategoryId: value,
+      CurrentPage: 1,
+    }));
   };
   const setSearchString = (value) => {
     setSortModel((prevSortModel) => ({
       ...prevSortModel,
       SearchString: value,
+      CurrentPage: 1,
     }));
   };
   const setSortOrder = (value) => {
-    setSortModel((prevSortModel) => ({ ...prevSortModel, SortOrder: value }));
+    setSortModel((prevSortModel) => ({
+      ...prevSortModel,
+      SortOrder: value,
+      CurrentPage: 1,
+    }));
   };
   const setFromPrice = (value) => {
-    setSortModel((prevSortModel) => ({ ...prevSortModel, FromPrice: value }));
+    setSortModel((prevSortModel) => ({
+      ...prevSortModel,
+      FromPrice: value,
+      CurrentPage: 1,
+    }));
   };
   const setEndPrice = (value) => {
-    setSortModel((prevSortModel) => ({ ...prevSortModel, EndPrice: value }));
+    setSortModel((prevSortModel) => ({
+      ...prevSortModel,
+      EndPrice: value,
+      CurrentPage: 1,
+    }));
   };
   const setPageSize = (value) => {
     setSortModel((prevSortModel) => ({ ...prevSortModel, PageSize: value }));
@@ -80,7 +97,8 @@ const HomePage = () => {
   const fetchBookListData = async () => {
     try {
       var res = await getAsync("/api/Book/GetAll", sortModel);
-      setBookList(res);
+      setBookList(res.books);
+      setTotal(res.count);
     } catch (error) {}
   };
 
@@ -98,18 +116,12 @@ const HomePage = () => {
     } catch (error) {}
   };
 
-  const getCountBook = async () => {
-    try {
-      var total = await getAsync("/api/Book/Count");
-      setTotal(total);
-    } catch (error) {}
-  };
-
   useEffect(() => {
     fetchCategoryData();
-    getCountBook();
+    // getCountBook();
     fetchHotCategories();
     fetchHotProducts();
+    console.log(searchText)
   }, []);
 
   useEffect(() => {
@@ -151,7 +163,9 @@ const HomePage = () => {
   const getDisplayedProducts = () => {
     const displayedProducts = [];
     for (let i = 0; i < 5; i++) {
-      displayedProducts.push(hotProducts[(startIndex + i) % hotProducts.length]);
+      displayedProducts.push(
+        hotProducts[(startIndex + i) % hotProducts.length]
+      );
     }
     return displayedProducts;
   };
@@ -159,21 +173,35 @@ const HomePage = () => {
     <div className="homepage-container">
       <div>
         <div className="category-container">
-          <div style={{color:"red",fontWeight:"500"}} className="category-title">Hot Categories</div>
+          <div
+            style={{ color: "red", fontWeight: "500" }}
+            className="category-title"
+          >
+            Hot Categories
+          </div>
           <div className="category-list">
-            {hotCategories.map((category) => (
+            {hotCategories.map((category, key) => (
               <div
-                key={category.id}
-                className={`category-item ${category.id === sortModel.CategoryId ? 'selected-category' : ''}`}
+                key={key}
+                className={`category-item ${
+                  category.id === sortModel.CategoryId
+                    ? "selected-category"
+                    : ""
+                }`}
                 onClick={() => setCategoryId(category.id)}
               >
-                <p>
+                <div className="category-content">
+                  <img
+                    style={{ width: "25px", width: "25px" }}
+                    src={category.iconUrl}
+                    alt=""
+                  />
                   {category.name}{" "}
                   <FireOutlined
-                    style={{ color: "red" }}
+                    style={{ color: "red",float:"right" }}
                     className="blinking-icon"
                   />
-                </p>
+                </div>
               </div>
             ))}
           </div>
@@ -187,47 +215,54 @@ const HomePage = () => {
             {categoryList.map((category) => (
               <div
                 key={category.id}
-                className={`category-item ${category.id === sortModel.CategoryId ? 'selected-category' : ''}`}
+                className={`category-item ${
+                  category.id === sortModel.CategoryId
+                    ? "selected-category"
+                    : ""
+                }`}
                 onClick={() => setCategoryId(category.id)}
               >
-                <p>{category.name}</p>
+                <div className="category-content">
+                  <img
+                    style={{ width: "25px", width: "25px" }}
+                    src={category.iconUrl}
+                    alt=""
+                  />
+                  {category.name}{" "}
+                </div>
               </div>
             ))}
           </div>
         </div>
       </div>
       <div className="booklist-container">
-
-        <div style={{backgroundColor:"white", padding:"15px",fontWeight:"500", fontSize:"24px", color:"red"}}>Hot Products</div>
+        <div
+          style={{
+            backgroundColor: "white",
+            padding: "15px",
+            fontWeight: "500",
+            fontSize: "24px",
+            color: "red",
+          }}
+        >
+          Hot Products
+        </div>
         <div className="hot-product-container">
-          
-          {/* <div
-            className={`nav-button prev-button ${startIndex === 0 ? 'disabled' : ''}`}
-            onClick={handlePrev}
-            disabled={startIndex === 0}
-          >
-            &lt;
-          </div> */}
           <div className="hot-product-list">
-            {getDisplayedProducts().length > 0 && getDisplayedProducts().map((product) => (
-              <Book
-                className="book"
-                key={product?.id}
-                id={product?.id}
-                imageUrl={product?.avatarUrl}
-                title={product?.title}
-                price={product?.price}
-                rate={product?.rate}
-                sold={product?.soldNumber}
-              />
-            ))}
+            {getDisplayedProducts().length > 0 &&
+              getDisplayedProducts().map((product, key) => (
+                <Book
+                  className="book"
+                  key={key}
+                  id={product?.id}
+                  imageUrl={product?.avatarUrl}
+                  title={product?.title}
+                  price={product?.price}
+                  rate={product?.rate}
+                  sold={product?.soldNumber}
+                />
+              ))}
           </div>
-          {/* <div
-            className={`nav-button next-button ${startIndex >= hotProducts.length - 5 ? 'disabled' : ''}`}
-            onClick={handleNext}
-          >
-             &gt;
-          </div> */}
         </div>
         <div className="sort-navbar">
           {sortOptions.map((option) => (
@@ -255,8 +290,18 @@ const HomePage = () => {
             />
           </div>
         </div>
-        <div className="book-list">
-          {bookList.map((product) => (
+        {
+            bookList.length == 0 && <div style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: '100%',
+              height: '250px',
+              backgroundColor: '#f0f0f0', // màu nền để dễ nhìn thấy
+            }}>No suitable product</div> 
+          }
+        {bookList.length > 0 && <div className="book-list">
+          { bookList.map((product) => (
             <Book
               className="book"
               key={product.id}
@@ -268,12 +313,14 @@ const HomePage = () => {
               sold={product.soldNumber}
             />
           ))}
-        </div>
+          
+        </div>}
         <div style={{ position: "relative" }}>
           <Pagination
             onChange={(pageSize, current) => setPageData(pageSize, current)}
             className="book-pagination"
             defaultCurrent={1}
+            current={sortModel.CurrentPage}
             total={total}
           />
         </div>
