@@ -133,6 +133,27 @@ const OrderManagement = () => {
     </div>
   );
 
+  const customCreatedDate = (row) => {
+    const formatDate = (dateString) => {
+      if (!dateString) return ""; // Xử lý các trường hợp không có giá trị
+  
+      const date = new Date(dateString);
+      const day = date.getDate();
+      const month = date.getMonth() + 1; // Tháng bắt đầu từ 0
+      const year = date.getFullYear();
+  
+      // Dùng padStart để đảm bảo độ dài chuỗi luôn là 2 ký tự
+      const formattedDate = `${day.toString().padStart(2, "0")}-${month
+        .toString()
+        .padStart(2, "0")}-${year}`;
+      return formattedDate;
+    };
+  
+    // Gọi hàm formatDate và trả về phần tử JSX
+    return <div>{formatDate(row.createdDate1)}</div>;
+  };
+  
+
   const customStatusCell = (row) => {
     if (row.status === -1) {
       return <div>Canceled</div>;
@@ -184,7 +205,7 @@ const OrderManagement = () => {
     },
     {
       name: "Created Date",
-      selector: (row) => row.createdDate,
+      cell: customCreatedDate,
       sortable: true,
       width: "120px",
     },

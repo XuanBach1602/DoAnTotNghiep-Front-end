@@ -134,7 +134,7 @@ const OrderDetail = () => {
             (order?.status === 2 && order?.shipStatus === 0)) && (
             <div style={{ display: "flex", gap: "20px" }}>
               <Popconfirm
-                title="Bạn có chắc chắn muốn hủy đơn hàng?"
+                title="Are you sure you want to cancel your order?"
                 okText="Yes"
                 cancelText="No"
                 onConfirm={() => updateStatus(-1, 0)}
@@ -192,7 +192,7 @@ Are you sure you want to complete your order?"
                   <div className="cartitem-price">${orderItem.price}</div>
                   <div>{orderItem.count}</div>
                   <div className="cart-item-total">
-                    ${orderItem.count * orderItem.price}
+                    ${(orderItem.count * orderItem.price)?.toFixed(2)}
                   </div>
                 </div>
               ))}
@@ -210,7 +210,7 @@ Are you sure you want to complete your order?"
               Temporary Total:{" "}
             </div>
             <div style={{ color: "orange", minWidth: "100px" }}>
-              ${order?.tempTotal}
+              ${(order?.tempTotal)?.toFixed(2)}
             </div>
           </div>
         </div>

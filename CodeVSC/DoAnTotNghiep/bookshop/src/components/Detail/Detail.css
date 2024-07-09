@@ -111,3 +111,6 @@
     color:rgb(250, 133, 0);
 }
 
+.description-content  p{
+    margin: 0;
+}

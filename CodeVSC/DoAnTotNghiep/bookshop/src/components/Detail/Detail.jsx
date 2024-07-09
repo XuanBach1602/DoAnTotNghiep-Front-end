@@ -199,9 +199,7 @@ const Detail = () => {
       </div>
       <div className="book-description">
         <div className="partion-title">DESCRIPTION</div>
-        <div style={{fontSize:"16px",lineHeight:"1.6"}}>
-        {book.description}
-        </div>
+        <div className="description-content" style={{fontSize:"16px",lineHeight:"1.6"}} dangerouslySetInnerHTML={{ __html: book.description }} />
       </div>
 
       <div className="books-in-this-category">

@@ -7,10 +7,13 @@ import { toast } from "react-toastify";
 import { useUser } from "../../UserContext";
 import { useNavigate } from "react-router-dom";
 import { Button, Modal } from "antd";
+import { loadStripe } from '@stripe/stripe-js';
 const OrderInformation = () => {
   const { user } = useUser();
   let { id } = useParams();
   const { deleteAsync, getAsync, postAsync, putAsync } = useApi();
+  const stripePublicKey = process.env.REACT_APP_STRIPE_PUBLIC_KEY;
+  const stripePromise = loadStripe(stripePublicKey);
   const [orderItemList, setOrderItemList] = useState([]);
   const [order, setOrder] = useState();
   const [status, setStatus] = useState("");
@@ -38,6 +41,22 @@ const OrderInformation = () => {
       toast.error("Cancel order fail, try again", {
         autoClose: 1000,
       });
+    }
+  }
+
+  const PlaceOrder = async (orderId) => {
+    try {
+      var res = await getAsync(`/api/Order/CreatePayment?orderId=${orderId}`);    
+      const sessionId = res.sessionId;
+      console.log(sessionId)
+      const stripe = await stripePromise;
+      const { error } = await stripe.redirectToCheckout({ sessionId });
+
+      if (error) {
+          console.error('Error redirecting to checkout:', error);
+      }
+    } catch (error) {
+      
     }
   }
 
@@ -80,6 +99,12 @@ const OrderInformation = () => {
           <LeftOutlined style={{ font: "24px" }} /> Back
         </div>
         <div>
+           {order?.status === 1 
+                      && (
+                        <Button type="primary" style={{marginRight:"20px"}} danger onClick={() => PlaceOrder(id)}>
+                          Place Order
+                        </Button>
+                      )}
           {(order?.status === 1|| (order?.status === 2 && order?.shipStatus ===0)) && <Button type="primary" danger style={{marginRight:"20px"}} onClick={() => showCancelConfirm()}>Cancel Order</Button> }
           Order Code {order?.code} |{" "}
           <span style={{ color: "#EB6526" }}>{status}</span>
@@ -98,8 +123,9 @@ const OrderInformation = () => {
         >
           <span>
             {user?.name} {user?.phoneNumber}
-          </span>{" "}
-          &nbsp; {user?.address}
+            <br />
+            {user?.address}
+          </span>
         </div>
         <div>
           Ordered Date: {order?.createdDate}
@@ -122,13 +148,15 @@ const OrderInformation = () => {
                     src={orderItem.avatarUrl}
                     alt=""
                     className="cart-item-img"
+                    style={{cursor:"pointer"}}
+                    onClick={(() => navigate(`/Book/${orderItem.bookId}`))}
                   />
                   <div className="cart-item-title">{orderItem.title}</div>
                 </div>
                 <div className="cartitem-price">${orderItem.price}</div>
                 <div>{orderItem.count}</div>
                 <div className="cart-item-total">
-                  ${orderItem.count * orderItem.price}
+                  ${(orderItem.count * orderItem.price)?.toFixed(2)}
                 </div>
               </div>
             ))}
@@ -147,7 +175,7 @@ const OrderInformation = () => {
               Temporary Total:{" "}
             </div>
             <div style={{ color: "orange", minWidth: "100px" }}>
-              ${order?.tempTotal}
+              ${(order?.tempTotal)?.toFixed(2)}
             </div>
           </div>
         </div>

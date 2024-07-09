@@ -124,7 +124,8 @@ const Category = () => {
           onClick={() => handleEdit(row)}
         />
         <Popconfirm
-          title="Bạn có chắc chắn muốn xóa?"
+          title="
+Are you sure you want to delete?"
           okText="Yes"
           cancelText="No"
           onConfirm={() => deleteCategory(row.id)}
@@ -177,7 +178,7 @@ const Category = () => {
       setFormError("Display Order must be greater than 0");
       return;
     }
-    if(!uploadedFile){
+    if(!uploadedFile && !formData.iconUrl){
       setFormError("Please upload icon file");
       return;
     }
@@ -301,7 +302,7 @@ const Category = () => {
         <div className="book-form" style={{height:"200px"}}>
           <div className="form-left">
             <div>
-              <label htmlFor="title">Name</label>
+              <label htmlFor="title">Name*</label>
               <Input
                 id="title"
                 value={formData.name}
@@ -309,7 +310,7 @@ const Category = () => {
               />
             </div>
             <div>
-              <label htmlFor="display order">Display Order</label>
+              <label htmlFor="display order">Display Order*</label>
               <Input
                 min={0}
                 id="display order"

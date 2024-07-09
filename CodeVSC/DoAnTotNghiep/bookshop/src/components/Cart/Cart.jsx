@@ -43,13 +43,19 @@ const Cart = () => {
   };
 
   const handleDecreaseCount = async (index, id) => {
-    if (cartItemList[index].count-- > 0) {
+    if (--cartItemList[index].count > 0) {
       try {
         var res = await putAsync(
           `/api/CartItem/UpdateQuantity?id=${id}&count=${cartItemList[index].count}`
         );
         fetchCartItemData();
       } catch (error) {}
+    }
+    else {
+      toast.error(`Quantity must be grater than 0`, {
+        autoClose: 1000,
+      });
+      cartItemList[index].count++;
     }
   };
 
@@ -61,8 +67,8 @@ const Cart = () => {
         totalPrice += item.count * item.price;
         selectedCount++;
       }
-      setSelectedCount(selectedCount);
     });
+    setSelectedCount(selectedCount);
     setTotalPrice(totalPrice.toFixed(2));
   };
 
@@ -213,7 +219,7 @@ const Cart = () => {
                   </Button>
                 </div>
                 <div className="cart-item-total">
-                  ${(cartItem.count * cartItem.price).toFixed(2)}
+                  ${((cartItem.count * cartItem.price)).toFixed(2)}
                 </div>
                 <div>
                   <Space>

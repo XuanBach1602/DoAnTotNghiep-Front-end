@@ -9,6 +9,7 @@ const UserProvider = ({ children }) => {
   const userInfo = Cookies.get("user") ? JSON.parse(Cookies.get("user")) : null;
   const [user, setUser] = useState(userInfo);
   const [isAuthenticated, setIsAuthenticated] = useState(!!token);
+  const [cartNumber, setCartNumber] = useState(0);
   const fetchUserData = async () => {
     try {
       var res = await getAsync("/api/User/Detail");
@@ -17,11 +18,21 @@ const UserProvider = ({ children }) => {
     } catch (error) {}
   }
 
-  // useEffect(() => {
-  //   fetchUserData();
-  // },[])
+  const fetchCartData = async () => {
+    try {
+      var res = await getAsync("/api/CartItem/GetAllByUserId");
+      setCartNumber(res.length);
+    } catch (error) {
+      setCartNumber(0);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserData();
+    fetchCartData();
+  },[])
   return (
-    <UserContext.Provider value={{ user, setUser, isAuthenticated, setIsAuthenticated, fetchUserData }}>
+    <UserContext.Provider value={{ user, setUser,cartNumber,fetchCartData, isAuthenticated, setIsAuthenticated, fetchUserData }}>
       {children}
     </UserContext.Provider>
   );

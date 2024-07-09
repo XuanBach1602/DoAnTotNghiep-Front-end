@@ -4,6 +4,10 @@
     height: 100%;
 }
 
+.admin-layout-main {
+    overflow-y: scroll;
+}
+
 .side-bar-admin {
     background-color: #545151  ;
     height: 100%;

@@ -81,19 +81,6 @@ function App() {
             <Route path="/admin/ChatManagement" element={<ChatManagement/>} />
             <Route path="/admin/ChangePassword" element={<ChangePassword/>} />
           </Route>
-          {/* <Route element={<MainLayout />}>
-            <Route path="/User" element={<UserLayout />}>
-              <Route path="/User" element={<Navigate to="/User/Account" />} />
-              <Route path="/User/Account" index element={<Account />} />
-              <Route path="/User/ChangePassword" element={<ChangePassword />} />
-              <Route path="/User/Orders" element={<Order />} />
-              <Route path="/User/Orders/:id" element={<OrderInformation />} />
-              <Route path="/User/Chat" element={<Chat />} />
-            </Route>
-            <Route path="/Cart" element={<Cart />} />
-            <Route path="/PlaceOrder" element={<PlaceOrder />} />
-           
-          </Route> */}
           <Route path="/PaymentNotify" element={<PaymentNotify />} />
         </Route>
 

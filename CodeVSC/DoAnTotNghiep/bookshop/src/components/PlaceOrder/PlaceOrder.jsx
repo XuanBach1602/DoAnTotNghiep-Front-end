@@ -230,7 +230,7 @@ const PlaceOrder = () => {
         <div style={{ color: "rgb(51, 178, 255)" }}>Place Order</div>
       </div>
       <div className="placeorder-main">
-        <div style={{padding:"0px"}} className="placeorder-header">
+        <div  className="placeorder-header">
           <div>
             <HomeTwoTone twoToneColor={"red"} /> Delivery Address
           </div>
@@ -272,15 +272,14 @@ const PlaceOrder = () => {
                   <div className="cartitem-price">${orderItem.price}</div>
                   <div>{orderItem.count}</div>
                   <div className="cart-item-tempTotal">
-                    ${orderItem.count * orderItem.price}
-                  </div>
+                    ${(orderItem.count * orderItem.price).toFixed(2)}</div>
                 </div>
               ))}
           </div>
           <div style={{backgroundColor:"white", marginTop:"15px", padding:"15px"}}>
             <div className="tempTotal-container">
               <div style={{ fontSize: "24px" }}>
-                Temporary Total: <span style={{ color: "orange" }}>${tempTotal}</span>
+                Temporary Total: <span style={{ color: "orange" }}>${tempTotal.toFixed(2)}</span>
               </div>
             </div>
             <hr style={{ border: "none", height: "1px", backgroundColor: "#D3CBC9" }} />
@@ -335,7 +334,7 @@ const PlaceOrder = () => {
             <hr style={{ border: "none", height: "1px", backgroundColor: "#D3CBC9" }} />
             <div className="tempTotal-container">
             <div style={{ fontSize: "24px" }}>
-              Total: <span style={{ color: "orange" }}>${total}</span>
+              Total: <span style={{ color: "orange" }}>${total.toFixed(2)}</span>
             </div>
             <div>
               <Button

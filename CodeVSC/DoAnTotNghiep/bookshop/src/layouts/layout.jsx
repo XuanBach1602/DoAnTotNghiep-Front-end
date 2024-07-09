@@ -15,24 +15,24 @@ const { Search } = Input;
 
 const MainLayout = () => {
   const [searchText, setSearchText] = useState("");
-  const { user } = useUser();
-  const [cartCount, setCartCount] = useState(0);
+  const { user, cartNumber, fetchCartData } = useUser();
+  const [cartCount, setCartCount] = useState(cartNumber);
   const navigate = useNavigate();
   const onSearch = (e) => {
     setSearchText(e);
     console.log(searchText);
   };
 
-  const fetchCartData = async () => {
-    try {
-      var res = await getAsync("/api/CartItem/GetAllByUserId");
-      setCartCount(res.length);
-    } catch (error) {}
-  };
+  // const fetchCartData = async () => {
+  //   try {
+  //     var res = await getAsync("/api/CartItem/GetAllByUserId");
+  //     setCartCount(res.length);
+  //   } catch (error) {}
+  // };
 
-  useEffect(() => {
-    fetchCartData();
-  }, []);
+  // useEffect(() => {
+  //   fetchCartData();
+  // }, []);
   return (
     <div className="main-container">
       <nav className="navbar-container">
@@ -77,7 +77,7 @@ const MainLayout = () => {
                 fontSize: "12px",
               }}
             >
-              {cartCount}
+              {cartNumber}
             </span>
           </div>
         </div>
@@ -88,13 +88,9 @@ const MainLayout = () => {
           <hr />
           <div className="company-title">Công ty TNHH Xuân Bách</div>
           <div className="company-address">
-            Tòa nhà số 1 đường Minh Khai, Hai Bà Trưng, Hà Nội
+            Số 1 Đại Cồ Việt, Hai Bà Trưng, Hà Nội
           </div>
-          <div>
-            Giấy chứng nhận đăng ký doanh nghiệp số 0309532909 do Sở Kế Hoạch và
-            Đầu Tư Thành phố Hà Nội cấp lần đầu vào ngày 06/06/2023.
-          </div>
-          <div>Hotline: 1900 6035</div>
+          <div>Hotline: 0981963789</div>
         </footer>
       </div>
     </div>

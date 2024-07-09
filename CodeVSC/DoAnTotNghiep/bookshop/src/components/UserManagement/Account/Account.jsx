@@ -61,11 +61,10 @@ const Account = () => {
   const save = async () => {
     let hasError = false;
     const errorMessages = [];
-
+    const fieldsToCheck = ["phoneNumber", "name"];
     // Kiểm tra từng trường trong userInfo
-    for (const key in userInfo) {
+    for (const key of fieldsToCheck) {
       if (userInfo.hasOwnProperty(key)) {
-        if(key == "avatar") continue;
         if (userInfo[key] === null || userInfo[key] === undefined) {
           errorMessages.push(`${key} is null or undefined`);
           hasError = true;
@@ -80,8 +79,8 @@ const Account = () => {
       formData.append("Name", userInfo.name);
       formData.append("Email", userInfo.email);
       formData.append("PhoneNumber", userInfo.phoneNumber);
-      formData.append("Address", userInfo.address);
-      formData.append("DateOfBirth", userInfo.dateOfBirth);
+      formData.append("Address", userInfo.address??"");
+      formData.append("DateOfBirth", userInfo.dateOfBirth??"");
       formData.append("Avatar",selectedFile)
       try {
         setIsLoading(true);
@@ -91,11 +90,11 @@ const Account = () => {
           autoClose: 1000,
         });
         setIsLoading(false);
+        setSelectedFile(null);
       } catch (error) {
         setIsLoading(false);
       }
       setError("")
-      console.log(userInfo);
       
     }
   };
@@ -119,10 +118,11 @@ const Account = () => {
       <div className="account-main">
         <div className="account-main-left">
           <div>
-            <label className="account-label" htmlFor="email">
+            <label className="account-label"  htmlFor="email">
               Email
             </label>
             <Input
+            readOnly
               id="email"
               value={userInfo.email}
               onChange={(e) => setEmail(e.target.value)}
@@ -130,7 +130,7 @@ const Account = () => {
           </div>
           <div>
             <label className="account-label" htmlFor="name">
-              Name
+              Name*
             </label>
             <Input
               id="name"
@@ -140,7 +140,7 @@ const Account = () => {
           </div>
           <div>
             <label className="account-label" htmlFor="phoneNumber">
-              Phone Number
+              Phone Number*
             </label>
             <Input
               id="phoneNumber"
@@ -174,7 +174,7 @@ const Account = () => {
               disabledDate={(current) =>
                 current &&
                 (
-                  current > dayjs("2024-04-31", dateFormat))
+                  current > dayjs("2024-07-09", dateFormat))
               }
             />
           </div>

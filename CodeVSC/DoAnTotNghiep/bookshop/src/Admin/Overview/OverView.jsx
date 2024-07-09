@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { getAsync } from "../../Apis/axios";
 import { RiseOutlined, FallOutlined } from "@ant-design/icons";
 import "./OverView.css";
 import { Select } from "antd";
 import useApi from "../../Apis/useApi";
 import { Column } from '@ant-design/charts';
+import moment from 'moment';
 
 const OverView = () => {
   const { deleteAsync, getAsync, postAsync, putAsync } = useApi();
@@ -51,10 +51,10 @@ const OverView = () => {
     fetchSaleData();
   }, []);
 
-  const chartData = saleData.map((sale, index) => ({
-    day: `Day ${index + 1}`,
-    sales: sale,
-  }));
+  const chartData = saleData.map((sale, index) => {
+    const date = moment().subtract(7 - index, 'days').format('DD-MM-YYYY');
+    return { day: date, sales: sale };
+  });
 
   const config = {
     data: chartData,
@@ -83,7 +83,6 @@ const OverView = () => {
       sales: { alias: 'Sales' },
     },
   };
-  
 
   return (
     <div className="overview-container">
@@ -95,7 +94,7 @@ const OverView = () => {
           <div>Here what happening with your store today</div>
           <div>
             <Select
-              defaultValue={optionArr[0]}
+              defaultValue={optionArr[0].value}
               style={{
                 width: 200,
               }}
@@ -110,34 +109,18 @@ const OverView = () => {
       </div>
       <div className="overview-board-list">
         <div>
-          Ecommerce Revenue
-          <div>${evaluateModel.revenue}</div>
-          {evaluateModel.revenueRate >= 0 && (
-            <div>
-              <RiseOutlined style={{ color: "#5BEAF3" }} />
-              {evaluateModel.revenueRate}%
-            </div>
-          )}
-          {evaluateModel.revenueRate < 0 && (
-            <div>
-              <FallOutlined style={{ color: "#F05E3E" }} />
-              {evaluateModel.revenueRate}%
-            </div>
-          )}
-        </div>
-        <div>
           New Customers
           <div>{evaluateModel.countUser}</div>
           {evaluateModel.userRate >= 0 && (
             <div>
               <RiseOutlined />
-              {evaluateModel.userRate}%
+              {(evaluateModel.userRate)?.toFixed(2)}%
             </div>
           )}
           {evaluateModel.userRate < 0 && (
             <div>
               <FallOutlined />
-              {evaluateModel.userRate}%
+              {(evaluateModel.userRate)?.toFixed(2)}%
             </div>
           )}
         </div>
@@ -147,34 +130,33 @@ const OverView = () => {
           {evaluateModel.newOrderRate >= 0 && (
             <div>
               <RiseOutlined />
-              {evaluateModel.newOrderRate}%
+              {(evaluateModel.newOrderRate)?.toFixed(2)}%
             </div>
           )}
           {evaluateModel.newOrderRate < 0 && (
             <div>
               <FallOutlined />
-              {evaluateModel.newOrderRate}%
+              {(evaluateModel.newOrderRate)?.toFixed(2)}%
             </div>
           )}
         </div>
         <div>
           Average Order Value
-          <div>${evaluateModel.averageOrderValue}</div>
+          <div>${(evaluateModel.averageOrderValue).toFixed(2)}</div>
           {evaluateModel.averageOrderValueRate >= 0 && (
             <div>
               <RiseOutlined />
-              {evaluateModel.averageOrderValueRate}%
+              {(evaluateModel.averageOrderValueRate)?.toFixed(2)}%
             </div>
           )}
           {evaluateModel.averageOrderValueRate < 0 && (
             <div>
               <FallOutlined />
-              {evaluateModel.averageOrderValueRate}%
+              {(evaluateModel.averageOrderValueRate)?.toFixed(2)}%
             </div>
           )}
         </div>
       </div>
-      {/* Biểu đồ hiển thị dữ liệu sale */}
       <div>
         <h3>Sales Data (Last 7 Days)</h3>
         <Column {...config} />

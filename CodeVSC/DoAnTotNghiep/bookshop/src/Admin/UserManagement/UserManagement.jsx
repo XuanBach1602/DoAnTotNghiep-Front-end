@@ -217,6 +217,14 @@ const UserManagement = () => {
       width: "100px",
     },
   ];
+
+  const estilos = {
+    table: {
+      style: {
+        minHeight: "450px",
+      },
+    },
+  };
   return (
     <div>
       <DataTable
@@ -228,12 +236,13 @@ const UserManagement = () => {
         paginationTotalRows={pagination.total}
         onChangePage={handlePageChange}
         onChangeRowsPerPage={handlePerRowsChange}
+        customStyles={estilos}
         subHeader
         subHeaderComponent={
           <div>
             <Search
-              style={{ width: "250px" }}
-              placeholder="Search by name"
+              style={{ width: "300px" }}
+              placeholder="Search by email or phone number"
               onSearch={handleSearchChange}
               enterButton
             />

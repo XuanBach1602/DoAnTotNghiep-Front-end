@@ -59,7 +59,7 @@ const AdminLayout = () => {
       onClick,
     };
   }
-  const {setUser,setIsAuthenticated} = useUser();
+  const {setUser,setIsAuthenticated,fetchCartData} = useUser();
   const SignOut = async () => {
     try {
       var res = await postAsync(`/api/Auth/SignOut`);
@@ -68,8 +68,9 @@ const AdminLayout = () => {
       toast.success("Sign out successfully", {
           autoClose: 1000,
         });
-        setUser(null);
+      setUser(null);
         setIsAuthenticated(false);
+        fetchCartData();
     } catch (error) {
     }
   }

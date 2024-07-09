@@ -145,6 +145,14 @@ const Discount = () => {
     }
   ]
 
+  const estilos = {
+    table: {
+      style: {
+        minHeight: "450px",
+      },
+    },
+  };
+
   const customActionCell = (row) => (
     <div>
       <Space>
@@ -327,6 +335,7 @@ const Discount = () => {
         title="Discount List"
         columns={columns}
         data={discountList}
+        customStyles={estilos}
         pagination
         paginationServer
         paginationTotalRows={pagination.total}

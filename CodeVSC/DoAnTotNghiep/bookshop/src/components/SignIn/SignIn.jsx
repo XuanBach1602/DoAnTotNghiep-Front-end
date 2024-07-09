@@ -14,7 +14,7 @@ const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [validation, setValidation] = useState("");
-  const {user,setUser, setIsAuthenticated} = useUser();
+  const {user,setUser, setIsAuthenticated, fetchCartData} = useUser();
   const navigate = useNavigate();
   const Post = async () => {
     const redirectPath = localStorage.getItem("redirectPath");
@@ -39,11 +39,13 @@ const SignIn = () => {
         toast.success("Sign in successfully!", {
           autoClose: 1000,
         });
+        fetchCartData();
         if(res.userInfo.role.includes("Admin")){
           navigate("/Admin");
           return;
         }
-        if(redirectPath && redirectPath.toLowerCase() !== "/signup"){
+        console.log("path",redirectPath)
+        if(redirectPath && redirectPath.toLowerCase() !== "/signup" && redirectPath.toLowerCase() !== "/user"){
           setTimeout(() => {
             navigate(redirectPath);
           }, 1000);

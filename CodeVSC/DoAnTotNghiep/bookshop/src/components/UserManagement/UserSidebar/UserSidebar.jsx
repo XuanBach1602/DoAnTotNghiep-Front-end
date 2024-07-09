@@ -25,7 +25,7 @@ function getItem(label, key, icon, children, type, onClick) {
   };
 }
 
-const {setUser,setIsAuthenticated} = useUser();
+const {setUser,setIsAuthenticated, fetchCartData} = useUser();
 const SignOut = async () => {
   try {
     var res = await postAsync(`/api/Auth/SignOut`);
@@ -36,6 +36,7 @@ const SignOut = async () => {
       });
       setUser(null);
       setIsAuthenticated(false);
+      fetchCartData();
   } catch (error) {
   }
 }

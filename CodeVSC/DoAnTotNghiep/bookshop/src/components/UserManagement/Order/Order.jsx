@@ -225,7 +225,7 @@ const getStatus = (order) => {
                     </div>
                     <div className="order-item-total">
                       <div style={{color:'black',fontSize:"20px"}}>{getStatus(orderItem)}</div>
-                      ${orderItem.count * orderItem.price}
+                      ${(orderItem.count * orderItem.price).toFixed(2)}
                     </div>
                   </div>
                   <div>
@@ -248,12 +248,12 @@ const getStatus = (order) => {
                           Repurchase
                         </Button>
                       )}
-                    {((orderItem.orderStatus === 2 &&
+                    {/* {((orderItem.orderStatus === 2 &&
                       orderItem.shipStatus === 0 )|| orderItem.orderStatus === 1) && (
                         <Button type="primary" danger onClick={() => showCancelConfirm(orderItem.orderId)}>
                           Cancel Order
                         </Button>
-                      )}
+                      )} */}
                     {orderItem.orderStatus === 2 &&
                       orderItem.shipStatus === 1 && (
                         <Button type="primary" danger>
@@ -266,12 +266,12 @@ const getStatus = (order) => {
                           Rate
                         </Button>
                       )}
-                      {orderItem.orderStatus === 1 
+                      {/* {orderItem.orderStatus === 1 
                       && (
                         <Button type="primary" danger onClick={() => PlaceOrder(orderItem.orderId)}>
                           Place Order
                         </Button>
-                      )}
+                      )} */}
                   </div>
                 </div>
               ))}
@@ -295,7 +295,7 @@ const getStatus = (order) => {
       >
         <h2>Rate product</h2>
         <div>
-          Prouct quality:
+          Product quality:
           <Rate
             style={{ fontSize: "16px", marginLeft: "30px" }}
             value={comment?.rate}
